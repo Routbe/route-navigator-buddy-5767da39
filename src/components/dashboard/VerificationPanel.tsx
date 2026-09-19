@@ -1,3 +1,4 @@
+import { BusinessInfluencerRequests } from "@/components/dashboard/BusinessInfluencerRequests";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { BadgeCheck, Check, CreditCard, Landmark, Loader2, Lock, QrCode, Tag } from "lucide-react";
@@ -1482,6 +1483,9 @@ export function VerificationPanel() {
           </div>
         </div>
       )}
+
+      {/* Bedrijfs- en influencerverificatie: rustig, klein, naast de gewone flow. */}
+      <BusinessInfluencerRequests />
     </section>
   );
 }
