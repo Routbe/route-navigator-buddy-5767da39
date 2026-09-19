@@ -33,7 +33,27 @@ export function toSessionUser(row: Row): SessionUser {
   };
 }
 
-/** The signed-in member for the in-flight request, or null when signed out. */
+/**
+ * The signed-in member for the in-flight request, or null when signed out.
+ *
+ * Neon Auth is the main door. Sign-in methods that Neon Auth does not host —
+ * today only Bluesky — leave their own signed, httpOnly cookie behind, which
+ * is checked second.
+ */
 export async function currentUser(): Promise<SessionUser | null> {
-  return getBridgedUser();
+  const bridged = await getBridgedUser();
+  if (bridged) return bridged;
+
+  try {
+    const { getRequestHeader } = await import("@tanstack/react-start/server");
+    const cookie = getRequestHeader("cookie") ?? "";
+    if (!cookie) return null;
+    const { readAppSessionUserId } = await import("@/lib/app-session.server");
+    const userId = await readAppSessionUserId(cookie);
+    if (!userId) return null;
+    const { findUserById } = await import("@/lib/auth/users.server");
+    return findUserById(userId);
+  } catch {
+    return null;
+  }
 }

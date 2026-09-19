@@ -78,6 +78,13 @@ const TILES: { id: string; label: string; provider: string; mark: string; color:
     mark: BRAND_ICONS.gitlab!.path,
     color: BRAND_ICONS.gitlab!.color,
   },
+  {
+    id: "bluesky",
+    label: "Bluesky",
+    provider: "bluesky",
+    mark: BRAND_ICONS.bluesky!.path,
+    color: BRAND_ICONS.bluesky!.color,
+  },
 ];
 
 /** Deliberately permissive: catches typos, never rejects a valid address. */
@@ -110,6 +117,8 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
   const [mode, setMode] = useState<Mode>(initialMode);
   const [sentTo, setSentTo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [blueskyOpen, setBlueskyOpen] = useState(false);
+  const [blueskyHandle, setBlueskyHandle] = useState("");
   const redirected = useRef(false);
 
   useEffect(() => {
@@ -117,6 +126,16 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
     redirected.current = true;
     nav("/dashboard", { replace: true });
   }, [user, nav]);
+
+  // Een mislukte Bluesky-poging komt terug met een leesbare uitleg in de URL.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const message = new URLSearchParams(window.location.search).get("bluesky_error");
+    if (message) {
+      toast.error(message);
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
 
   // Altijd de canonieke origin: preview-hosts mogen nooit in een OAuth-redirect
   // belanden, anders weigert Google met `redirect_uri_mismatch`.
