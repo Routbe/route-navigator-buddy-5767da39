@@ -79,7 +79,16 @@ export async function applySignupProfile(
     }
   }
 
+  // Elk nieuw lid krijgt meteen een werkende gratis pagina op /u/<handle>.
+  // Koos het lid zelf geen naam (of sloeg het de stap over), dan levert de
+  // generator een vrije naam die aan de gratis regel voldoet.
+  const ensureAlias = async (preferred: string | null) => {
+    const { ensureFreeAliasProfile } = await import("./alias-profile.server");
+    await ensureFreeAliasProfile(userId, { preferred, seed: fullName || preferred });
+  };
+
   if (Object.keys(patch).length === 0) {
+    await ensureAlias(requested || profile?.username || null);
     return { ok: true, applied: false, handle: profile?.username ?? null };
   }
 

@@ -593,6 +593,22 @@ export async function activateVerification(paymentId: string, providerRef: strin
   const { markInviteVerified } = await import("./referral.server");
   await markInviteVerified(userId);
 
+  // Twee pagina's: de gratis /u/-pagina blijft, en het geverifieerde profiel
+  // verhuist naar voornaam.achternaam (of de eerstvolgende vrije variant).
+  try {
+    const { ensureFreeAliasProfile } = await import("./alias-profile.server");
+    await ensureFreeAliasProfile(userId);
+    if (hasLegalName) {
+      const { activateVerifiedRootHandle } = await import("./verified-root-handle.server");
+      await activateVerifiedRootHandle(
+        userId,
+        profileRows[0]?.["verified_legal_name"] as string | null,
+      );
+    }
+  } catch (error) {
+    console.error("verified root handle activation failed", error);
+  }
+
   try {
     const { provisionAliasForUser } = await import("./alias.server");
     await provisionAliasForUser(userId);

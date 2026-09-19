@@ -31,7 +31,9 @@ export type AliasProfileDTO = {
 export const getAliasProfile = createServerFn({ method: "GET" })
   .middleware([requireAuth])
   .handler(async ({ context }) => {
-    const { readAliasProfile } = await import("./alias-profile.server");
+    const { readAliasProfile, ensureFreeAliasProfile } = await import("./alias-profile.server");
+    // Vangnet: elk account hoort een werkende gratis pagina te hebben.
+    await ensureFreeAliasProfile(context.userId);
     const profile = await readAliasProfile(context.userId);
     return profile as AliasProfileDTO | null;
   });

@@ -1,4 +1,4 @@
-import { BadgeCheck, ShieldCheck } from "lucide-react";
+import { BadgeCheck, ShieldCheck, Sparkles } from "lucide-react";
 import { BadgeBackdrop } from "@/components/profile/BadgeBackdrop";
 import { DomainBadgeIcon } from "@/components/profile/DomainBadgeIcon";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -7,6 +7,7 @@ import { useI18n } from "@/lib/i18n";
 import {
   BADGE_DOMAIN_BODY,
   BADGE_HUMAN_BODY,
+  BADGE_INFLUENCER_BODY,
   BADGE_VERIFIED_BODY,
   formatBadgeName,
   type BadgeBackdrop as BadgeBackdropStyle,

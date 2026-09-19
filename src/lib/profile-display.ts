@@ -14,7 +14,7 @@
  *  • `domain`   — zwarte domeinbadge: eigendom van de domeinnaam bewezen via DNS
  *  • `none`     — geen badge (moet niet)
  */
-export type BadgeType = "verified" | "human" | "domain" | "none";
+export type BadgeType = "verified" | "human" | "domain" | "influencer" | "none";
 /** Achterzetsel achter de badge zodat het vinkje op elke achtergrond leesbaar blijft. */
 export type BadgeBackdrop = "none" | "glow" | "sticker" | "ring";
 export type BadgeNameFormat = "full" | "initials" | "lower";
@@ -315,8 +315,13 @@ export const BADGE_TYPES: { id: BadgeType; label: string; note: string }[] = [
   },
   {
     id: "domain",
-    label: "Domeinbadge (zwart)",
-    note: "Bevestigt dat jij deze domeinnaam claimde via DNS.",
+    label: "Bedrijfsbadge (zwart)",
+    note: "Bevestigt een bedrijf: officiële naam, btw-nummer en domeinnaam gecontroleerd.",
+  },
+  {
+    id: "influencer",
+    label: "Influencerbadge (roze)",
+    note: "Bevestigt een publiek profiel met gecontroleerde sociale kanalen.",
   },
   {
     id: "none",
@@ -607,7 +612,10 @@ export const BADGE_VERIFIED_BODY =
   "Officieel geverifieerd lid. Identiteit en accountstatus zijn succesvol gevalideerd via ROUT.";
 
 export const BADGE_DOMAIN_BODY =
-  "Deze domeinnaam is via de DNS-zone geverifieerd: het bewijs dat dit account de eigenaar van dat domein is. De badge zegt niets over de identiteit erachter.";
+  "Bedrijfsaccount. De officiële bedrijfsnaam, het btw-nummer en de domeinnaam zijn door ROUT nagekeken. De pagina draait op de officiële domeinnaam van het bedrijf.";
+
+export const BADGE_INFLUENCER_BODY =
+  "Publiek profiel. De sociale kanalen achter dit account zijn door ROUT gecontroleerd en horen aantoonbaar bij deze persoon.";
 
 export const BADGE_HUMAN_BODY =
   "Dit account is gekoppeld aan een geverifieerd ROUT-account: een bevestigde mens. De wettelijke naam blijft hier privé — die staat enkel bij het blauwe vinkje op het geverifieerde profiel.";
