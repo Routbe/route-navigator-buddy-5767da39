@@ -86,6 +86,12 @@ export interface ProfileRecord {
   verified?: boolean;
   /** Aliasprofiel (`/u/…`) van een lid met een geverifieerd rootprofiel. */
   human_linked?: boolean;
+  /** Goedgekeurd bedrijf: zwarte badge, pagina op de officiële domeinnaam. */
+  is_business?: boolean;
+  business_name?: string | null;
+  business_vat?: string | null;
+  /** Goedgekeurde influencer: roze badge. */
+  is_influencer?: boolean;
   status?: string;
   bio?: string | null;
   is_early_believer?: boolean;
