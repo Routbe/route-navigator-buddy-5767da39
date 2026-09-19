@@ -78,6 +78,13 @@ const TILES: { id: string; label: string; provider: string; mark: string; color:
     mark: BRAND_ICONS.gitlab!.path,
     color: BRAND_ICONS.gitlab!.color,
   },
+  {
+    id: "bluesky",
+    label: "Bluesky",
+    provider: "bluesky",
+    mark: BRAND_ICONS.bluesky!.path,
+    color: BRAND_ICONS.bluesky!.color,
+  },
 ];
 
 /** Deliberately permissive: catches typos, never rejects a valid address. */
