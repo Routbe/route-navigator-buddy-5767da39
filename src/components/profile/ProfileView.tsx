@@ -147,9 +147,17 @@ export function ProfileView({
    */
   const badgeType: BadgeType = free
     ? "human"
-    : prefs.badgeType === "domain" && !claimedDomain
-      ? "verified"
-      : prefs.badgeType;
+    : // Een goedgekeurd bedrijf draagt altijd de zwarte badge, een goedgekeurde
+      // influencer de roze; beide zijn toegekend en dus niet vrij te kiezen.
+      profile.is_business
+      ? "domain"
+      : profile.is_influencer
+        ? "influencer"
+        : prefs.badgeType === "influencer"
+          ? "verified"
+          : prefs.badgeType === "domain" && !claimedDomain
+            ? "verified"
+            : prefs.badgeType;
   const showWatermark =
     shouldShowWatermark(Boolean(profile.verified), prefs) &&
     (profile.verified ? prefs.showRoutBadge : true);
