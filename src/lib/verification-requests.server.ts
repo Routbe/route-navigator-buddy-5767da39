@@ -13,6 +13,16 @@ import { sql } from "@/lib/neon";
 
 type Row = Record<string, unknown>;
 
+/** JSON-veilige vorm: wat over de RPC-grens naar de browser mag. */
+export type JsonLike = string | number | boolean | null | JsonLike[] | { [key: string]: JsonLike };
+export type PublicRow = { [key: string]: JsonLike };
+
+/** Maakt een databaserij serialiseerbaar (datums → ISO-tekst). */
+const toPublic = (row: Row | undefined | null): PublicRow | null =>
+  row ? (JSON.parse(JSON.stringify(row)) as PublicRow) : null;
+const toPublicList = (rows: Row[]): PublicRow[] =>
+  JSON.parse(JSON.stringify(rows)) as PublicRow[];
+
 export const INFLUENCER_FEE_CENTS = 7000;
 
 let tablesReady = false;
@@ -114,7 +124,7 @@ export async function submitBusinessRequest(userId: string, input: BusinessInput
             ${input.contactName ?? null}, ${input.contactEmail ?? null})
     returning id, status, created_at
   `) as Row[];
-  return { ok: true as const, request: rows[0] ?? null };
+  return { ok: true as const, request: toPublic(rows[0]) };
 }
 
 /** De meest recente bedrijfsaanvraag van dit account. */
@@ -127,7 +137,7 @@ export async function myBusinessRequest(userId: string) {
      order by created_at desc
      limit 1
   `) as Row[];
-  return rows[0] ?? null;
+  return toPublic(rows[0]);
 }
 
 export type InfluencerInput = {
@@ -173,7 +183,7 @@ export async function submitInfluencerRequest(userId: string, input: InfluencerI
             ${fee === 0 ? "pending" : "awaiting_payment"})
     returning id, status, fee_cents, created_at
   `) as Row[];
-  return { ok: true as const, feeCents: fee, request: rows[0] ?? null };
+  return { ok: true as const, feeCents: fee, request: toPublic(rows[0]) };
 }
 
 export async function myInfluencerRequest(userId: string) {
@@ -186,33 +196,33 @@ export async function myInfluencerRequest(userId: string) {
      order by created_at desc
      limit 1
   `) as Row[];
-  return rows[0] ?? null;
+  return toPublic(rows[0]);
 }
 
 /* ─────────────────────────── beheer ─────────────────────────── */
 
 export async function listBusinessRequests(status = "pending") {
   await ensureTables();
-  return (await sql`
+  return toPublicList((await sql`
     select b.*, p.username, p.display_name
       from public.business_verifications b
       left join public.profiles p on p.id = b.user_id
      where b.status = ${status}
      order by b.created_at desc
      limit 100
-  `) as Row[];
+  `) as Row[]);
 }
 
 export async function listInfluencerRequests(status = "pending") {
   await ensureTables();
-  return (await sql`
+  return toPublicList((await sql`
     select i.*, p.username, p.display_name, coalesce(p.verified, false) as verified
       from public.influencer_requests i
       left join public.profiles p on p.id = i.user_id
      where i.status = ${status}
      order by i.created_at desc
      limit 100
-  `) as Row[];
+  `) as Row[]);
 }
 
 /**
