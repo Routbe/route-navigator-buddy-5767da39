@@ -227,7 +227,10 @@ export async function readPublicProfile(rawHandle: string) {
              coalesce(total_reach_count, 0) as total_reach_count,
              to_jsonb(profiles) -> 'display_prefs' as display_prefs,
              to_jsonb(profiles) ->> 'country_code' as country_code,
-             to_jsonb(profiles) ->> 'subdomain_alias' as subdomain_alias
+             to_jsonb(profiles) ->> 'subdomain_alias' as subdomain_alias,
+             coalesce((to_jsonb(profiles) ->> 'is_business')::boolean, false) as is_business,
+             to_jsonb(profiles) ->> 'business_name' as business_name,
+             coalesce((to_jsonb(profiles) ->> 'is_influencer')::boolean, false) as is_influencer
         from public.profiles
        where (lower(username) = ${username}
               or lower(coalesce(subdomain_alias, '')) = ${username})

@@ -956,6 +956,25 @@ export async function reprocessInboundPayment(eventId: string, adminId: string) 
     })
     .eq("id", payment.user_id);
 
+  // Ook hier hoort het lid twee pagina's te krijgen: de gratis /u/-pagina
+  // blijft en het geverifieerde profiel verhuist naar voornaam.achternaam.
+  try {
+    const { data: named } = await dbAdmin
+      .from("profiles")
+      .select("verified_legal_name")
+      .eq("id", payment.user_id)
+      .maybeSingle();
+    const { ensureFreeAliasProfile } = await import("@/lib/alias-profile.server");
+    await ensureFreeAliasProfile(payment.user_id);
+    const { activateVerifiedRootHandle } = await import("@/lib/verified-root-handle.server");
+    await activateVerifiedRootHandle(
+      payment.user_id,
+      (named as { verified_legal_name?: string | null } | null)?.verified_legal_name ?? null,
+    );
+  } catch (error) {
+    console.error("verified root handle activation failed", error);
+  }
+
   await writeAudit({
     adminId,
     action: "PAYMENT_REPROCESSED",

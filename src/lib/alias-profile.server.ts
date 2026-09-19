@@ -239,6 +239,70 @@ export async function readPublicAliasProfile(rawHandle: string) {
 }
 
 /**
+ * Zorgt dat dit account een werkende gratis pagina heeft op `/u/<handle>`.
+ *
+ * Wordt aangeroepen bij registratie en als vangnet zodra de Studio het
+ * aliasprofiel opvraagt. Idempotent: bestaat er al een rij, dan blijft die
+ * ongemoeid. Zonder bruikbare voorkeursnaam krijgt het lid automatisch een
+ * willekeurige vrije naam (bv. `jona4827`).
+ */
+export async function ensureFreeAliasProfile(
+  userId: string,
+  opts: { preferred?: string | null; seed?: string | null } = {},
+): Promise<{ handle: string | null; created: boolean }> {
+  try {
+    await ensureAliasTable();
+
+    const mine = (await sql`
+      select handle from public.alias_profiles where user_id = ${userId} limit 1
+    `) as Row[];
+    if (mine[0]) return { handle: (mine[0]["handle"] as string | null) ?? null, created: false };
+
+    // Zonder voorkeur valt de gratis naam terug op de huidige roothandle van
+    // een nog niet geverifieerd account, anders op de weergavenaam.
+    const profileRows = (await sql`
+      select username, display_name, coalesce(verified, false) as verified
+        from public.profiles where id = ${userId} limit 1
+    `) as Row[];
+    const profile = profileRows[0];
+    const rootUsername = (profile?.["username"] as string | null) ?? null;
+    const seed =
+      opts.seed ?? (profile?.["display_name"] as string | null) ?? rootUsername ?? null;
+    const preferred = opts.preferred ?? (profile?.["verified"] ? null : rootUsername);
+
+    const { freeHandleCandidates } = await import("./free-handle");
+    const { isHandleAvailableFor } = await import("./handle-namespace.server");
+
+    for (const candidate of freeHandleCandidates(preferred, seed, 16)) {
+      if (!(await isHandleAvailableFor(candidate, userId))) continue;
+      try {
+        await sql`
+          insert into public.alias_profiles (user_id, handle, display_name, avatar_url, updated_at)
+          values (
+            ${userId}, ${candidate},
+            ${(profile?.["display_name"] as string | null) ?? null},
+            ${null},
+            now()
+          )
+          on conflict (user_id) do nothing
+        `;
+      } catch {
+        continue; // Naam werd tussentijds geclaimd: volgende kandidaat.
+      }
+      const check = (await sql`
+        select handle from public.alias_profiles where user_id = ${userId} limit 1
+      `) as Row[];
+      if (check[0]) return { handle: check[0]["handle"] as string, created: true };
+    }
+
+    return { handle: null, created: false };
+  } catch (error) {
+    console.error("[alias:ensure:failed]", error);
+    return { handle: null, created: false };
+  }
+}
+
+/**
  * Bewaart de gratis handle wanneer een account naar een geverifieerde
  * roothandle verhuist.
  *
