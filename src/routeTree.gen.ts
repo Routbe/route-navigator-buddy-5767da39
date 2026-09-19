@@ -53,6 +53,7 @@ import { Route as ApiClaimRootRouteImport } from './routes/api/claim-root'
 import { Route as ApiPaymentStatusRouteImport } from './routes/api_.payment-status'
 import { Route as AuthIndexRouteImport } from './routes/auth.index'
 import { Route as AuthAuthViewRouteImport } from './routes/auth.$authView'
+import { Route as AuthBlueskyRouteImport } from './routes/auth.bluesky'
 import { Route as DevEmailsRouteImport } from './routes/dev.emails'
 import { Route as GiftCodeRouteImport } from './routes/gift_.$code'
 import { Route as RUsernameRouteImport } from './routes/r.$username'
@@ -82,6 +83,9 @@ import { Route as UUsernameSlugRouteImport } from './routes/u.$username.$slug'
 import { Route as UUsernameDonateRouteImport } from './routes/u.$username.donate'
 import { Route as UUsernameTipRouteImport } from './routes/u.$username.tip'
 import { Route as ApiPublicBadgeHandleRouteImport } from './routes/api_.public.badge.$handle'
+import { Route as ApiPublicBlueskyCallbackRouteImport } from './routes/api_.public.bluesky.callback'
+import { Route as ApiPublicBlueskyClientMetadataDotjsonRouteImport } from './routes/api_.public.bluesky.client-metadata[.]json'
+import { Route as ApiPublicBlueskyStartRouteImport } from './routes/api_.public.bluesky.start'
 import { Route as ApiPublicCronCheckDnsRouteImport } from './routes/api_.public.cron.check-dns'
 import { Route as ApiPublicCronScanTransfersRouteImport } from './routes/api_.public.cron.scan-transfers'
 import { Route as ApiPublicCronSecureshieldBillingRouteImport } from './routes/api_.public.cron.secureshield-billing'
@@ -310,6 +314,11 @@ const AuthAuthViewRoute = AuthAuthViewRouteImport.update({
   path: '/$authView',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthBlueskyRoute = AuthBlueskyRouteImport.update({
+  id: '/bluesky',
+  path: '/bluesky',
+  getParentRoute: () => AuthRoute,
+} as any)
 const DevEmailsRoute = DevEmailsRouteImport.update({
   id: '/dev/emails',
   path: '/dev/emails',
@@ -464,6 +473,23 @@ const ApiPublicBadgeHandleRoute = ApiPublicBadgeHandleRouteImport.update({
   path: '/api/public/badge/$handle',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicBlueskyCallbackRoute =
+  ApiPublicBlueskyCallbackRouteImport.update({
+    id: '/api_/public/bluesky/callback',
+    path: '/api/public/bluesky/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicBlueskyClientMetadataDotjsonRoute =
+  ApiPublicBlueskyClientMetadataDotjsonRouteImport.update({
+    id: '/api_/public/bluesky/client-metadata.json',
+    path: '/api/public/bluesky/client-metadata.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicBlueskyStartRoute = ApiPublicBlueskyStartRouteImport.update({
+  id: '/api_/public/bluesky/start',
+  path: '/api/public/bluesky/start',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicCronCheckDnsRoute = ApiPublicCronCheckDnsRouteImport.update({
   id: '/api_/public/cron/check-dns',
   path: '/api/public/cron/check-dns',
@@ -554,6 +580,7 @@ export interface FileRoutesByFullPath {
   '/api/claim-root': typeof ApiClaimRootRoute
   '/api/payment-status': typeof ApiPaymentStatusRoute
   '/auth/$authView': typeof AuthAuthViewRoute
+  '/auth/bluesky': typeof AuthBlueskyRoute
   '/dev/emails': typeof DevEmailsRoute
   '/gift/$code': typeof GiftCodeRoute
   '/r/$username': typeof RUsernameRoute
@@ -584,6 +611,9 @@ export interface FileRoutesByFullPath {
   '/u/$username/donate': typeof UUsernameDonateRoute
   '/u/$username/tip': typeof UUsernameTipRoute
   '/api/public/badge/$handle': typeof ApiPublicBadgeHandleRoute
+  '/api/public/bluesky/callback': typeof ApiPublicBlueskyCallbackRoute
+  '/api/public/bluesky/client-metadata.json': typeof ApiPublicBlueskyClientMetadataDotjsonRoute
+  '/api/public/bluesky/start': typeof ApiPublicBlueskyStartRoute
   '/api/public/cron/check-dns': typeof ApiPublicCronCheckDnsRoute
   '/api/public/cron/scan-transfers': typeof ApiPublicCronScanTransfersRoute
   '/api/public/cron/secureshield-billing': typeof ApiPublicCronSecureshieldBillingRoute
@@ -635,6 +665,7 @@ export interface FileRoutesByTo {
   '/api/claim-root': typeof ApiClaimRootRoute
   '/api/payment-status': typeof ApiPaymentStatusRoute
   '/auth/$authView': typeof AuthAuthViewRoute
+  '/auth/bluesky': typeof AuthBlueskyRoute
   '/dev/emails': typeof DevEmailsRoute
   '/gift/$code': typeof GiftCodeRoute
   '/r/$username': typeof RUsernameRoute
@@ -665,6 +696,9 @@ export interface FileRoutesByTo {
   '/u/$username/donate': typeof UUsernameDonateRoute
   '/u/$username/tip': typeof UUsernameTipRoute
   '/api/public/badge/$handle': typeof ApiPublicBadgeHandleRoute
+  '/api/public/bluesky/callback': typeof ApiPublicBlueskyCallbackRoute
+  '/api/public/bluesky/client-metadata.json': typeof ApiPublicBlueskyClientMetadataDotjsonRoute
+  '/api/public/bluesky/start': typeof ApiPublicBlueskyStartRoute
   '/api/public/cron/check-dns': typeof ApiPublicCronCheckDnsRoute
   '/api/public/cron/scan-transfers': typeof ApiPublicCronScanTransfersRoute
   '/api/public/cron/secureshield-billing': typeof ApiPublicCronSecureshieldBillingRoute
@@ -719,6 +753,7 @@ export interface FileRoutesById {
   '/api/claim-root': typeof ApiClaimRootRoute
   '/api_/payment-status': typeof ApiPaymentStatusRoute
   '/auth/$authView': typeof AuthAuthViewRoute
+  '/auth/bluesky': typeof AuthBlueskyRoute
   '/dev/emails': typeof DevEmailsRoute
   '/gift_/$code': typeof GiftCodeRoute
   '/r/$username': typeof RUsernameRoute
@@ -749,6 +784,9 @@ export interface FileRoutesById {
   '/u/$username/donate': typeof UUsernameDonateRoute
   '/u/$username/tip': typeof UUsernameTipRoute
   '/api_/public/badge/$handle': typeof ApiPublicBadgeHandleRoute
+  '/api_/public/bluesky/callback': typeof ApiPublicBlueskyCallbackRoute
+  '/api_/public/bluesky/client-metadata.json': typeof ApiPublicBlueskyClientMetadataDotjsonRoute
+  '/api_/public/bluesky/start': typeof ApiPublicBlueskyStartRoute
   '/api_/public/cron/check-dns': typeof ApiPublicCronCheckDnsRoute
   '/api_/public/cron/scan-transfers': typeof ApiPublicCronScanTransfersRoute
   '/api_/public/cron/secureshield-billing': typeof ApiPublicCronSecureshieldBillingRoute
@@ -803,6 +841,7 @@ export interface FileRouteTypes {
     | '/api/claim-root'
     | '/api/payment-status'
     | '/auth/$authView'
+    | '/auth/bluesky'
     | '/dev/emails'
     | '/gift/$code'
     | '/r/$username'
@@ -833,6 +872,9 @@ export interface FileRouteTypes {
     | '/u/$username/donate'
     | '/u/$username/tip'
     | '/api/public/badge/$handle'
+    | '/api/public/bluesky/callback'
+    | '/api/public/bluesky/client-metadata.json'
+    | '/api/public/bluesky/start'
     | '/api/public/cron/check-dns'
     | '/api/public/cron/scan-transfers'
     | '/api/public/cron/secureshield-billing'
@@ -884,6 +926,7 @@ export interface FileRouteTypes {
     | '/api/claim-root'
     | '/api/payment-status'
     | '/auth/$authView'
+    | '/auth/bluesky'
     | '/dev/emails'
     | '/gift/$code'
     | '/r/$username'
@@ -914,6 +957,9 @@ export interface FileRouteTypes {
     | '/u/$username/donate'
     | '/u/$username/tip'
     | '/api/public/badge/$handle'
+    | '/api/public/bluesky/callback'
+    | '/api/public/bluesky/client-metadata.json'
+    | '/api/public/bluesky/start'
     | '/api/public/cron/check-dns'
     | '/api/public/cron/scan-transfers'
     | '/api/public/cron/secureshield-billing'
@@ -967,6 +1013,7 @@ export interface FileRouteTypes {
     | '/api/claim-root'
     | '/api_/payment-status'
     | '/auth/$authView'
+    | '/auth/bluesky'
     | '/dev/emails'
     | '/gift_/$code'
     | '/r/$username'
@@ -997,6 +1044,9 @@ export interface FileRouteTypes {
     | '/u/$username/donate'
     | '/u/$username/tip'
     | '/api_/public/badge/$handle'
+    | '/api_/public/bluesky/callback'
+    | '/api_/public/bluesky/client-metadata.json'
+    | '/api_/public/bluesky/start'
     | '/api_/public/cron/check-dns'
     | '/api_/public/cron/scan-transfers'
     | '/api_/public/cron/secureshield-billing'
@@ -1056,6 +1106,9 @@ export interface RootRouteChildren {
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
   ApiPublicBadgeHandleRoute: typeof ApiPublicBadgeHandleRoute
+  ApiPublicBlueskyCallbackRoute: typeof ApiPublicBlueskyCallbackRoute
+  ApiPublicBlueskyClientMetadataDotjsonRoute: typeof ApiPublicBlueskyClientMetadataDotjsonRoute
+  ApiPublicBlueskyStartRoute: typeof ApiPublicBlueskyStartRoute
   ApiPublicCronCheckDnsRoute: typeof ApiPublicCronCheckDnsRoute
   ApiPublicCronScanTransfersRoute: typeof ApiPublicCronScanTransfersRoute
   ApiPublicCronSecureshieldBillingRoute: typeof ApiPublicCronSecureshieldBillingRoute
@@ -1376,6 +1429,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAuthViewRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/auth/bluesky': {
+      id: '/auth/bluesky'
+      path: '/bluesky'
+      fullPath: '/auth/bluesky'
+      preLoaderRoute: typeof AuthBlueskyRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/dev/emails': {
       id: '/dev/emails'
       path: '/dev/emails'
@@ -1579,6 +1639,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicBadgeHandleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api_/public/bluesky/callback': {
+      id: '/api_/public/bluesky/callback'
+      path: '/api/public/bluesky/callback'
+      fullPath: '/api/public/bluesky/callback'
+      preLoaderRoute: typeof ApiPublicBlueskyCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api_/public/bluesky/client-metadata.json': {
+      id: '/api_/public/bluesky/client-metadata.json'
+      path: '/api/public/bluesky/client-metadata.json'
+      fullPath: '/api/public/bluesky/client-metadata.json'
+      preLoaderRoute: typeof ApiPublicBlueskyClientMetadataDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api_/public/bluesky/start': {
+      id: '/api_/public/bluesky/start'
+      path: '/api/public/bluesky/start'
+      fullPath: '/api/public/bluesky/start'
+      preLoaderRoute: typeof ApiPublicBlueskyStartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api_/public/cron/check-dns': {
       id: '/api_/public/cron/check-dns'
       path: '/api/public/cron/check-dns'
@@ -1729,11 +1810,13 @@ const ApiRouteWithChildren = ApiRoute._addFileChildren(ApiRouteChildren)
 
 interface AuthRouteChildren {
   AuthAuthViewRoute: typeof AuthAuthViewRoute
+  AuthBlueskyRoute: typeof AuthBlueskyRoute
   AuthIndexRoute: typeof AuthIndexRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthAuthViewRoute: AuthAuthViewRoute,
+  AuthBlueskyRoute: AuthBlueskyRoute,
   AuthIndexRoute: AuthIndexRoute,
 }
 
@@ -1804,6 +1887,10 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
   ApiPublicBadgeHandleRoute: ApiPublicBadgeHandleRoute,
+  ApiPublicBlueskyCallbackRoute: ApiPublicBlueskyCallbackRoute,
+  ApiPublicBlueskyClientMetadataDotjsonRoute:
+    ApiPublicBlueskyClientMetadataDotjsonRoute,
+  ApiPublicBlueskyStartRoute: ApiPublicBlueskyStartRoute,
   ApiPublicCronCheckDnsRoute: ApiPublicCronCheckDnsRoute,
   ApiPublicCronScanTransfersRoute: ApiPublicCronScanTransfersRoute,
   ApiPublicCronSecureshieldBillingRoute: ApiPublicCronSecureshieldBillingRoute,
