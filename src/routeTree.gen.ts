@@ -79,6 +79,7 @@ import { Route as ApiPublicBrandLogoRouteImport } from './routes/api_.public.bra
 import { Route as ApiPublicGalleryMediaRouteImport } from './routes/api_.public.gallery-media'
 import { Route as ApiPublicHealthRouteImport } from './routes/api_.public.health'
 import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api_.public.stripe-webhook'
+import { Route as AuthMastodonCallbackRouteImport } from './routes/auth_.mastodon.callback'
 import { Route as UUsernameSlugRouteImport } from './routes/u.$username.$slug'
 import { Route as UUsernameDonateRouteImport } from './routes/u.$username.donate'
 import { Route as UUsernameTipRouteImport } from './routes/u.$username.tip'
@@ -91,6 +92,7 @@ import { Route as ApiPublicCronScanTransfersRouteImport } from './routes/api_.pu
 import { Route as ApiPublicCronSecureshieldBillingRouteImport } from './routes/api_.public.cron.secureshield-billing'
 import { Route as ApiPublicCronSyncFollowersRouteImport } from './routes/api_.public.cron.sync-followers'
 import { Route as ApiPublicCronSyncSocialsRouteImport } from './routes/api_.public.cron.sync-socials'
+import { Route as ApiPublicMastodonStartRouteImport } from './routes/api_.public.mastodon.start'
 import { Route as ApiPublicOgHandleRouteImport } from './routes/api_.public.og.$handle'
 import { Route as ApiPublicSessionLogoutRouteImport } from './routes/api_.public.session.logout'
 import { Route as ApiPublicWebhooksBankingRouteImport } from './routes/api_.public.webhooks.banking'
@@ -454,6 +456,11 @@ const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
   path: '/api/public/stripe-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthMastodonCallbackRoute = AuthMastodonCallbackRouteImport.update({
+  id: '/auth_/mastodon/callback',
+  path: '/auth/mastodon/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UUsernameSlugRoute = UUsernameSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -520,6 +527,11 @@ const ApiPublicCronSyncSocialsRoute =
     path: '/api/public/cron/sync-socials',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicMastodonStartRoute = ApiPublicMastodonStartRouteImport.update({
+  id: '/api_/public/mastodon/start',
+  path: '/api/public/mastodon/start',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicOgHandleRoute = ApiPublicOgHandleRouteImport.update({
   id: '/api_/public/og/$handle',
   path: '/api/public/og/$handle',
@@ -613,6 +625,7 @@ export interface FileRoutesByFullPath {
   '/api/public/gallery-media': typeof ApiPublicGalleryMediaRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
+  '/auth/mastodon/callback': typeof AuthMastodonCallbackRoute
   '/u/$username/$slug': typeof UUsernameSlugRoute
   '/u/$username/donate': typeof UUsernameDonateRoute
   '/u/$username/tip': typeof UUsernameTipRoute
@@ -625,6 +638,7 @@ export interface FileRoutesByFullPath {
   '/api/public/cron/secureshield-billing': typeof ApiPublicCronSecureshieldBillingRoute
   '/api/public/cron/sync-followers': typeof ApiPublicCronSyncFollowersRoute
   '/api/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
+  '/api/public/mastodon/start': typeof ApiPublicMastodonStartRoute
   '/api/public/og/$handle': typeof ApiPublicOgHandleRoute
   '/api/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
@@ -699,6 +713,7 @@ export interface FileRoutesByTo {
   '/api/public/gallery-media': typeof ApiPublicGalleryMediaRoute
   '/api/public/health': typeof ApiPublicHealthRoute
   '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
+  '/auth/mastodon/callback': typeof AuthMastodonCallbackRoute
   '/u/$username/$slug': typeof UUsernameSlugRoute
   '/u/$username/donate': typeof UUsernameDonateRoute
   '/u/$username/tip': typeof UUsernameTipRoute
@@ -711,6 +726,7 @@ export interface FileRoutesByTo {
   '/api/public/cron/secureshield-billing': typeof ApiPublicCronSecureshieldBillingRoute
   '/api/public/cron/sync-followers': typeof ApiPublicCronSyncFollowersRoute
   '/api/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
+  '/api/public/mastodon/start': typeof ApiPublicMastodonStartRoute
   '/api/public/og/$handle': typeof ApiPublicOgHandleRoute
   '/api/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
@@ -788,6 +804,7 @@ export interface FileRoutesById {
   '/api_/public/gallery-media': typeof ApiPublicGalleryMediaRoute
   '/api_/public/health': typeof ApiPublicHealthRoute
   '/api_/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
+  '/auth_/mastodon/callback': typeof AuthMastodonCallbackRoute
   '/u/$username/$slug': typeof UUsernameSlugRoute
   '/u/$username/donate': typeof UUsernameDonateRoute
   '/u/$username/tip': typeof UUsernameTipRoute
@@ -800,6 +817,7 @@ export interface FileRoutesById {
   '/api_/public/cron/secureshield-billing': typeof ApiPublicCronSecureshieldBillingRoute
   '/api_/public/cron/sync-followers': typeof ApiPublicCronSyncFollowersRoute
   '/api_/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
+  '/api_/public/mastodon/start': typeof ApiPublicMastodonStartRoute
   '/api_/public/og/$handle': typeof ApiPublicOgHandleRoute
   '/api_/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api_/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
@@ -877,6 +895,7 @@ export interface FileRouteTypes {
     | '/api/public/gallery-media'
     | '/api/public/health'
     | '/api/public/stripe-webhook'
+    | '/auth/mastodon/callback'
     | '/u/$username/$slug'
     | '/u/$username/donate'
     | '/u/$username/tip'
@@ -889,6 +908,7 @@ export interface FileRouteTypes {
     | '/api/public/cron/secureshield-billing'
     | '/api/public/cron/sync-followers'
     | '/api/public/cron/sync-socials'
+    | '/api/public/mastodon/start'
     | '/api/public/og/$handle'
     | '/api/public/session/logout'
     | '/api/public/webhooks/banking'
@@ -963,6 +983,7 @@ export interface FileRouteTypes {
     | '/api/public/gallery-media'
     | '/api/public/health'
     | '/api/public/stripe-webhook'
+    | '/auth/mastodon/callback'
     | '/u/$username/$slug'
     | '/u/$username/donate'
     | '/u/$username/tip'
@@ -975,6 +996,7 @@ export interface FileRouteTypes {
     | '/api/public/cron/secureshield-billing'
     | '/api/public/cron/sync-followers'
     | '/api/public/cron/sync-socials'
+    | '/api/public/mastodon/start'
     | '/api/public/og/$handle'
     | '/api/public/session/logout'
     | '/api/public/webhooks/banking'
@@ -1051,6 +1073,7 @@ export interface FileRouteTypes {
     | '/api_/public/gallery-media'
     | '/api_/public/health'
     | '/api_/public/stripe-webhook'
+    | '/auth_/mastodon/callback'
     | '/u/$username/$slug'
     | '/u/$username/donate'
     | '/u/$username/tip'
@@ -1063,6 +1086,7 @@ export interface FileRouteTypes {
     | '/api_/public/cron/secureshield-billing'
     | '/api_/public/cron/sync-followers'
     | '/api_/public/cron/sync-socials'
+    | '/api_/public/mastodon/start'
     | '/api_/public/og/$handle'
     | '/api_/public/session/logout'
     | '/api_/public/webhooks/banking'
@@ -1117,6 +1141,7 @@ export interface RootRouteChildren {
   ApiPublicGalleryMediaRoute: typeof ApiPublicGalleryMediaRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
+  AuthMastodonCallbackRoute: typeof AuthMastodonCallbackRoute
   ApiPublicBadgeHandleRoute: typeof ApiPublicBadgeHandleRoute
   ApiPublicBlueskyCallbackRoute: typeof ApiPublicBlueskyCallbackRoute
   ApiPublicBlueskyClientMetadataDotjsonRoute: typeof ApiPublicBlueskyClientMetadataDotjsonRoute
@@ -1126,6 +1151,7 @@ export interface RootRouteChildren {
   ApiPublicCronSecureshieldBillingRoute: typeof ApiPublicCronSecureshieldBillingRoute
   ApiPublicCronSyncFollowersRoute: typeof ApiPublicCronSyncFollowersRoute
   ApiPublicCronSyncSocialsRoute: typeof ApiPublicCronSyncSocialsRoute
+  ApiPublicMastodonStartRoute: typeof ApiPublicMastodonStartRoute
   ApiPublicOgHandleRoute: typeof ApiPublicOgHandleRoute
   ApiPublicSessionLogoutRoute: typeof ApiPublicSessionLogoutRoute
   ApiPublicWebhooksBankingRoute: typeof ApiPublicWebhooksBankingRoute
@@ -1624,6 +1650,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth_/mastodon/callback': {
+      id: '/auth_/mastodon/callback'
+      path: '/auth/mastodon/callback'
+      fullPath: '/auth/mastodon/callback'
+      preLoaderRoute: typeof AuthMastodonCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/u/$username/$slug': {
       id: '/u/$username/$slug'
       path: '/$slug'
@@ -1706,6 +1739,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/cron/sync-socials'
       fullPath: '/api/public/cron/sync-socials'
       preLoaderRoute: typeof ApiPublicCronSyncSocialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api_/public/mastodon/start': {
+      id: '/api_/public/mastodon/start'
+      path: '/api/public/mastodon/start'
+      fullPath: '/api/public/mastodon/start'
+      preLoaderRoute: typeof ApiPublicMastodonStartRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api_/public/og/$handle': {
@@ -1906,6 +1946,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicGalleryMediaRoute: ApiPublicGalleryMediaRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
+  AuthMastodonCallbackRoute: AuthMastodonCallbackRoute,
   ApiPublicBadgeHandleRoute: ApiPublicBadgeHandleRoute,
   ApiPublicBlueskyCallbackRoute: ApiPublicBlueskyCallbackRoute,
   ApiPublicBlueskyClientMetadataDotjsonRoute:
@@ -1916,6 +1957,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicCronSecureshieldBillingRoute: ApiPublicCronSecureshieldBillingRoute,
   ApiPublicCronSyncFollowersRoute: ApiPublicCronSyncFollowersRoute,
   ApiPublicCronSyncSocialsRoute: ApiPublicCronSyncSocialsRoute,
+  ApiPublicMastodonStartRoute: ApiPublicMastodonStartRoute,
   ApiPublicOgHandleRoute: ApiPublicOgHandleRoute,
   ApiPublicSessionLogoutRoute: ApiPublicSessionLogoutRoute,
   ApiPublicWebhooksBankingRoute: ApiPublicWebhooksBankingRoute,
