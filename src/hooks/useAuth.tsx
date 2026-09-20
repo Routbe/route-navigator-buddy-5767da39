@@ -96,6 +96,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       /* the cookie is cleared server-side; a network hiccup must not trap the user */
     }
+    try {
+      // Eigen sessiekoekje (Bluesky-aanmelding) apart wissen.
+      await fetch("/api/public/session/logout", { method: "POST", credentials: "include" });
+    } catch {
+      /* idem: netwerkfout mag het uitloggen niet blokkeren */
+    }
     setUser(null);
     await router.invalidate();
     const path = typeof window === "undefined" ? "/" : window.location.pathname;

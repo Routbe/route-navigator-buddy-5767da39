@@ -294,7 +294,11 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
               <button
                 key={tile.id}
                 type="button"
-                onClick={() => void oauth(tile.provider)}
+                onClick={() =>
+                  tile.provider === "bluesky"
+                    ? setBlueskyOpen((open) => !open)
+                    : void oauth(tile.provider)
+                }
                 disabled={loading}
                 aria-label={`Verder met ${tile.label}`}
                 title={`Verder met ${tile.label}`}
@@ -317,6 +321,34 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
               </button>
             ))}
           </div>
+
+          {blueskyOpen && (
+            <form
+              className="mt-2 flex items-center gap-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const handle = blueskyHandle.trim().replace(/^@/, "").toLowerCase();
+                if (!handle.includes(".")) {
+                  toast.error("Geef je volledige Bluesky-naam op, bijvoorbeeld jona.bsky.social.");
+                  return;
+                }
+                setLoading(true);
+                window.location.href = `/api/public/bluesky/start?handle=${encodeURIComponent(handle)}&next=${encodeURIComponent("/dashboard")}`;
+              }}
+            >
+              <Input
+                value={blueskyHandle}
+                onChange={(e) => setBlueskyHandle(e.target.value)}
+                placeholder="jona.bsky.social"
+                aria-label="Bluesky-naam"
+                autoComplete="username"
+                className="h-10 rounded-lg"
+              />
+              <Button type="submit" className="h-10 rounded-lg" disabled={loading}>
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : "Verder"}
+              </Button>
+            </form>
+          )}
 
           <p className="mt-1.5 flex items-center gap-1 text-[11px] text-muted-foreground">
             <ShieldCheck className="h-3 w-3 shrink-0" aria-hidden /> {t("auth.sso.note")}

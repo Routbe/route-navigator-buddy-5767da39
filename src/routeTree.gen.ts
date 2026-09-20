@@ -92,6 +92,7 @@ import { Route as ApiPublicCronSecureshieldBillingRouteImport } from './routes/a
 import { Route as ApiPublicCronSyncFollowersRouteImport } from './routes/api_.public.cron.sync-followers'
 import { Route as ApiPublicCronSyncSocialsRouteImport } from './routes/api_.public.cron.sync-socials'
 import { Route as ApiPublicOgHandleRouteImport } from './routes/api_.public.og.$handle'
+import { Route as ApiPublicSessionLogoutRouteImport } from './routes/api_.public.session.logout'
 import { Route as ApiPublicWebhooksBankingRouteImport } from './routes/api_.public.webhooks.banking'
 import { Route as ApiPublicBookingsIdActionRouteImport } from './routes/api_.public.bookings.$id.$action'
 
@@ -524,6 +525,11 @@ const ApiPublicOgHandleRoute = ApiPublicOgHandleRouteImport.update({
   path: '/api/public/og/$handle',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicSessionLogoutRoute = ApiPublicSessionLogoutRouteImport.update({
+  id: '/api_/public/session/logout',
+  path: '/api/public/session/logout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicWebhooksBankingRoute =
   ApiPublicWebhooksBankingRouteImport.update({
     id: '/api_/public/webhooks/banking',
@@ -620,6 +626,7 @@ export interface FileRoutesByFullPath {
   '/api/public/cron/sync-followers': typeof ApiPublicCronSyncFollowersRoute
   '/api/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
   '/api/public/og/$handle': typeof ApiPublicOgHandleRoute
+  '/api/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
   '/api/public/bookings/$id/$action': typeof ApiPublicBookingsIdActionRoute
 }
@@ -705,6 +712,7 @@ export interface FileRoutesByTo {
   '/api/public/cron/sync-followers': typeof ApiPublicCronSyncFollowersRoute
   '/api/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
   '/api/public/og/$handle': typeof ApiPublicOgHandleRoute
+  '/api/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
   '/api/public/bookings/$id/$action': typeof ApiPublicBookingsIdActionRoute
 }
@@ -793,6 +801,7 @@ export interface FileRoutesById {
   '/api_/public/cron/sync-followers': typeof ApiPublicCronSyncFollowersRoute
   '/api_/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
   '/api_/public/og/$handle': typeof ApiPublicOgHandleRoute
+  '/api_/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api_/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
   '/api_/public/bookings/$id/$action': typeof ApiPublicBookingsIdActionRoute
 }
@@ -881,6 +890,7 @@ export interface FileRouteTypes {
     | '/api/public/cron/sync-followers'
     | '/api/public/cron/sync-socials'
     | '/api/public/og/$handle'
+    | '/api/public/session/logout'
     | '/api/public/webhooks/banking'
     | '/api/public/bookings/$id/$action'
   fileRoutesByTo: FileRoutesByTo
@@ -966,6 +976,7 @@ export interface FileRouteTypes {
     | '/api/public/cron/sync-followers'
     | '/api/public/cron/sync-socials'
     | '/api/public/og/$handle'
+    | '/api/public/session/logout'
     | '/api/public/webhooks/banking'
     | '/api/public/bookings/$id/$action'
   id:
@@ -1053,6 +1064,7 @@ export interface FileRouteTypes {
     | '/api_/public/cron/sync-followers'
     | '/api_/public/cron/sync-socials'
     | '/api_/public/og/$handle'
+    | '/api_/public/session/logout'
     | '/api_/public/webhooks/banking'
     | '/api_/public/bookings/$id/$action'
   fileRoutesById: FileRoutesById
@@ -1115,6 +1127,7 @@ export interface RootRouteChildren {
   ApiPublicCronSyncFollowersRoute: typeof ApiPublicCronSyncFollowersRoute
   ApiPublicCronSyncSocialsRoute: typeof ApiPublicCronSyncSocialsRoute
   ApiPublicOgHandleRoute: typeof ApiPublicOgHandleRoute
+  ApiPublicSessionLogoutRoute: typeof ApiPublicSessionLogoutRoute
   ApiPublicWebhooksBankingRoute: typeof ApiPublicWebhooksBankingRoute
   ApiPublicBookingsIdActionRoute: typeof ApiPublicBookingsIdActionRoute
 }
@@ -1702,6 +1715,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicOgHandleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api_/public/session/logout': {
+      id: '/api_/public/session/logout'
+      path: '/api/public/session/logout'
+      fullPath: '/api/public/session/logout'
+      preLoaderRoute: typeof ApiPublicSessionLogoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api_/public/webhooks/banking': {
       id: '/api_/public/webhooks/banking'
       path: '/api/public/webhooks/banking'
@@ -1897,6 +1917,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicCronSyncFollowersRoute: ApiPublicCronSyncFollowersRoute,
   ApiPublicCronSyncSocialsRoute: ApiPublicCronSyncSocialsRoute,
   ApiPublicOgHandleRoute: ApiPublicOgHandleRoute,
+  ApiPublicSessionLogoutRoute: ApiPublicSessionLogoutRoute,
   ApiPublicWebhooksBankingRoute: ApiPublicWebhooksBankingRoute,
   ApiPublicBookingsIdActionRoute: ApiPublicBookingsIdActionRoute,
 }
