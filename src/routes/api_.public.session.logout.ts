@@ -15,7 +15,7 @@ function clear(): Response {
   });
 }
 
-export const Route = createFileRoute("/api/public/session/logout")({
+export const Route = createFileRoute("/api_/public/session/logout")({
   server: {
     handlers: {
       POST: async () => clear(),
