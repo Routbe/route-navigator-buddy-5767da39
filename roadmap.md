@@ -17,3 +17,9 @@
   uitvoeren (de app maakt de tabellen anders zelf aan bij het eerste gebruik).
 - Betaling van € 70 voor influenceraanvragen koppelen aan de bestaande
   betaalketen; nu blijft zo'n aanvraag op "wacht op betaling" staan.
+
+## Nieuw verzoek — veilig verder uitwerken
+- [ ] Mastodon-login afronden en foutmeldingen tonen.
+- [ ] Bestaande auth/build-problemen controleren zonder regressies.
+- [ ] ROUT Developer Console en OAuth/OIDC-provider veilig ontwerpen en bouwen.
+- [ ] Sovereign Wallet, credential-uitgifte en publiek tonen veilig ontwerpen en bouwen.
