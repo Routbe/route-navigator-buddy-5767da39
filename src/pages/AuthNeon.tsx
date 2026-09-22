@@ -119,6 +119,8 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
   const [loading, setLoading] = useState(false);
   const [blueskyOpen, setBlueskyOpen] = useState(false);
   const [blueskyHandle, setBlueskyHandle] = useState("");
+  const [mastodonOpen, setMastodonOpen] = useState(false);
+  const [mastodonInstance, setMastodonInstance] = useState("");
   const redirected = useRef(false);
 
   useEffect(() => {
