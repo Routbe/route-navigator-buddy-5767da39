@@ -132,7 +132,8 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
   // Een mislukte Bluesky-poging komt terug met een leesbare uitleg in de URL.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const message = new URLSearchParams(window.location.search).get("bluesky_error");
+    const params = new URLSearchParams(window.location.search);
+    const message = params.get("bluesky_error") ?? params.get("mastodon_error");
     if (message) {
       toast.error(message);
       window.history.replaceState({}, "", window.location.pathname);
