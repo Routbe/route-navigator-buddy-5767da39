@@ -95,6 +95,7 @@ import { Route as ApiPublicCronSecureshieldBillingRouteImport } from './routes/a
 import { Route as ApiPublicCronSyncFollowersRouteImport } from './routes/api_.public.cron.sync-followers'
 import { Route as ApiPublicCronSyncSocialsRouteImport } from './routes/api_.public.cron.sync-socials'
 import { Route as ApiPublicMastodonStartRouteImport } from './routes/api_.public.mastodon.start'
+import { Route as ApiPublicOauthTokenRouteImport } from './routes/api_.public.oauth.token'
 import { Route as ApiPublicOgHandleRouteImport } from './routes/api_.public.og.$handle'
 import { Route as ApiPublicSessionLogoutRouteImport } from './routes/api_.public.session.logout'
 import { Route as ApiPublicWebhooksBankingRouteImport } from './routes/api_.public.webhooks.banking'
@@ -545,6 +546,11 @@ const ApiPublicMastodonStartRoute = ApiPublicMastodonStartRouteImport.update({
   path: '/api/public/mastodon/start',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicOauthTokenRoute = ApiPublicOauthTokenRouteImport.update({
+  id: '/api_/public/oauth/token',
+  path: '/api/public/oauth/token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicOgHandleRoute = ApiPublicOgHandleRouteImport.update({
   id: '/api_/public/og/$handle',
   path: '/api/public/og/$handle',
@@ -654,6 +660,7 @@ export interface FileRoutesByFullPath {
   '/api/public/cron/sync-followers': typeof ApiPublicCronSyncFollowersRoute
   '/api/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
   '/api/public/mastodon/start': typeof ApiPublicMastodonStartRoute
+  '/api/public/oauth/token': typeof ApiPublicOauthTokenRoute
   '/api/public/og/$handle': typeof ApiPublicOgHandleRoute
   '/api/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
@@ -744,6 +751,7 @@ export interface FileRoutesByTo {
   '/api/public/cron/sync-followers': typeof ApiPublicCronSyncFollowersRoute
   '/api/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
   '/api/public/mastodon/start': typeof ApiPublicMastodonStartRoute
+  '/api/public/oauth/token': typeof ApiPublicOauthTokenRoute
   '/api/public/og/$handle': typeof ApiPublicOgHandleRoute
   '/api/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
@@ -837,6 +845,7 @@ export interface FileRoutesById {
   '/api_/public/cron/sync-followers': typeof ApiPublicCronSyncFollowersRoute
   '/api_/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
   '/api_/public/mastodon/start': typeof ApiPublicMastodonStartRoute
+  '/api_/public/oauth/token': typeof ApiPublicOauthTokenRoute
   '/api_/public/og/$handle': typeof ApiPublicOgHandleRoute
   '/api_/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api_/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
@@ -930,6 +939,7 @@ export interface FileRouteTypes {
     | '/api/public/cron/sync-followers'
     | '/api/public/cron/sync-socials'
     | '/api/public/mastodon/start'
+    | '/api/public/oauth/token'
     | '/api/public/og/$handle'
     | '/api/public/session/logout'
     | '/api/public/webhooks/banking'
@@ -1020,6 +1030,7 @@ export interface FileRouteTypes {
     | '/api/public/cron/sync-followers'
     | '/api/public/cron/sync-socials'
     | '/api/public/mastodon/start'
+    | '/api/public/oauth/token'
     | '/api/public/og/$handle'
     | '/api/public/session/logout'
     | '/api/public/webhooks/banking'
@@ -1112,6 +1123,7 @@ export interface FileRouteTypes {
     | '/api_/public/cron/sync-followers'
     | '/api_/public/cron/sync-socials'
     | '/api_/public/mastodon/start'
+    | '/api_/public/oauth/token'
     | '/api_/public/og/$handle'
     | '/api_/public/session/logout'
     | '/api_/public/webhooks/banking'
@@ -1179,6 +1191,7 @@ export interface RootRouteChildren {
   ApiPublicCronSyncFollowersRoute: typeof ApiPublicCronSyncFollowersRoute
   ApiPublicCronSyncSocialsRoute: typeof ApiPublicCronSyncSocialsRoute
   ApiPublicMastodonStartRoute: typeof ApiPublicMastodonStartRoute
+  ApiPublicOauthTokenRoute: typeof ApiPublicOauthTokenRoute
   ApiPublicOgHandleRoute: typeof ApiPublicOgHandleRoute
   ApiPublicSessionLogoutRoute: typeof ApiPublicSessionLogoutRoute
   ApiPublicWebhooksBankingRoute: typeof ApiPublicWebhooksBankingRoute
@@ -1789,6 +1802,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicMastodonStartRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api_/public/oauth/token': {
+      id: '/api_/public/oauth/token'
+      path: '/api/public/oauth/token'
+      fullPath: '/api/public/oauth/token'
+      preLoaderRoute: typeof ApiPublicOauthTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api_/public/og/$handle': {
       id: '/api_/public/og/$handle'
       path: '/api/public/og/$handle'
@@ -2001,6 +2021,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicCronSyncFollowersRoute: ApiPublicCronSyncFollowersRoute,
   ApiPublicCronSyncSocialsRoute: ApiPublicCronSyncSocialsRoute,
   ApiPublicMastodonStartRoute: ApiPublicMastodonStartRoute,
+  ApiPublicOauthTokenRoute: ApiPublicOauthTokenRoute,
   ApiPublicOgHandleRoute: ApiPublicOgHandleRoute,
   ApiPublicSessionLogoutRoute: ApiPublicSessionLogoutRoute,
   ApiPublicWebhooksBankingRoute: ApiPublicWebhooksBankingRoute,
