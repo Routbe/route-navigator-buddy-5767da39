@@ -361,6 +361,40 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
             </form>
           )}
 
+          {mastodonOpen && (
+            <form
+              className="mt-2 flex items-center gap-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const instance = mastodonInstance
+                  .trim()
+                  .replace(/^@/, "")
+                  .replace(/^https?:\/\//i, "")
+                  .replace(/\/.*$/, "")
+                  .toLowerCase();
+                if (!instance.includes(".")) {
+                  toast.error("Geef de server op waar je account staat, bijvoorbeeld mastodon.social.");
+                  return;
+                }
+                setLoading(true);
+                window.location.href = `/api/public/mastodon/start?instance=${encodeURIComponent(instance)}&next=${encodeURIComponent("/dashboard")}`;
+              }}
+            >
+              <Input
+                value={mastodonInstance}
+                onChange={(e) => setMastodonInstance(e.target.value)}
+                placeholder="mastodon.social"
+                aria-label="Fediverse-server"
+                autoComplete="url"
+                className="h-10 rounded-lg"
+              />
+              <Button type="submit" className="h-10 rounded-lg" disabled={loading}>
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : "Verder"}
+              </Button>
+            </form>
+          )}
+
+
           <p className="mt-1.5 flex items-center gap-1 text-[11px] text-muted-foreground">
             <ShieldCheck className="h-3 w-3 shrink-0" aria-hidden /> {t("auth.sso.note")}
           </p>
