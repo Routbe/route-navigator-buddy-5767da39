@@ -297,11 +297,19 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
               <button
                 key={tile.id}
                 type="button"
-                onClick={() =>
-                  tile.provider === "bluesky"
-                    ? setBlueskyOpen((open) => !open)
-                    : void oauth(tile.provider)
-                }
+                onClick={() => {
+                  if (tile.provider === "bluesky") {
+                    setMastodonOpen(false);
+                    setBlueskyOpen((open) => !open);
+                    return;
+                  }
+                  if (tile.provider === "mastodon") {
+                    setBlueskyOpen(false);
+                    setMastodonOpen((open) => !open);
+                    return;
+                  }
+                  void oauth(tile.provider);
+                }}
                 disabled={loading}
                 aria-label={`Verder met ${tile.label}`}
                 title={`Verder met ${tile.label}`}
