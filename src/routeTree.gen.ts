@@ -43,6 +43,8 @@ import { Route as UsernameSlugRouteImport } from './routes/$username.$slug'
 import { Route as UsernameDonateRouteImport } from './routes/$username.donate'
 import { Route as UsernameTipRouteImport } from './routes/$username.tip'
 import { Route as DotwellKnownAtprotoDidRouteImport } from './routes/[.]well-known.atproto-did'
+import { Route as DotwellKnownJwksDotjsonRouteImport } from './routes/[.]well-known.jwks[.]json'
+import { Route as DotwellKnownOpenidConfigurationRouteImport } from './routes/[.]well-known.openid-configuration'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDomainsRouteImport } from './routes/_authenticated/domains'
@@ -93,6 +95,7 @@ import { Route as ApiPublicCronSecureshieldBillingRouteImport } from './routes/a
 import { Route as ApiPublicCronSyncFollowersRouteImport } from './routes/api_.public.cron.sync-followers'
 import { Route as ApiPublicCronSyncSocialsRouteImport } from './routes/api_.public.cron.sync-socials'
 import { Route as ApiPublicMastodonStartRouteImport } from './routes/api_.public.mastodon.start'
+import { Route as ApiPublicOauthTokenRouteImport } from './routes/api_.public.oauth.token'
 import { Route as ApiPublicOgHandleRouteImport } from './routes/api_.public.og.$handle'
 import { Route as ApiPublicSessionLogoutRouteImport } from './routes/api_.public.session.logout'
 import { Route as ApiPublicWebhooksBankingRouteImport } from './routes/api_.public.webhooks.banking'
@@ -267,6 +270,17 @@ const DotwellKnownAtprotoDidRoute = DotwellKnownAtprotoDidRouteImport.update({
   path: '/.well-known/atproto-did',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DotwellKnownJwksDotjsonRoute = DotwellKnownJwksDotjsonRouteImport.update({
+  id: '/.well-known/jwks.json',
+  path: '/.well-known/jwks.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DotwellKnownOpenidConfigurationRoute =
+  DotwellKnownOpenidConfigurationRouteImport.update({
+    id: '/.well-known/openid-configuration',
+    path: '/.well-known/openid-configuration',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -532,6 +546,11 @@ const ApiPublicMastodonStartRoute = ApiPublicMastodonStartRouteImport.update({
   path: '/api/public/mastodon/start',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicOauthTokenRoute = ApiPublicOauthTokenRouteImport.update({
+  id: '/api_/public/oauth/token',
+  path: '/api/public/oauth/token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicOgHandleRoute = ApiPublicOgHandleRouteImport.update({
   id: '/api_/public/og/$handle',
   path: '/api/public/og/$handle',
@@ -589,6 +608,8 @@ export interface FileRoutesByFullPath {
   '/$username/donate': typeof UsernameDonateRoute
   '/$username/tip': typeof UsernameTipRoute
   '/.well-known/atproto-did': typeof DotwellKnownAtprotoDidRoute
+  '/.well-known/jwks.json': typeof DotwellKnownJwksDotjsonRoute
+  '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/domains': typeof AuthenticatedDomainsRoute
@@ -639,6 +660,7 @@ export interface FileRoutesByFullPath {
   '/api/public/cron/sync-followers': typeof ApiPublicCronSyncFollowersRoute
   '/api/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
   '/api/public/mastodon/start': typeof ApiPublicMastodonStartRoute
+  '/api/public/oauth/token': typeof ApiPublicOauthTokenRoute
   '/api/public/og/$handle': typeof ApiPublicOgHandleRoute
   '/api/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
@@ -677,6 +699,8 @@ export interface FileRoutesByTo {
   '/$username/donate': typeof UsernameDonateRoute
   '/$username/tip': typeof UsernameTipRoute
   '/.well-known/atproto-did': typeof DotwellKnownAtprotoDidRoute
+  '/.well-known/jwks.json': typeof DotwellKnownJwksDotjsonRoute
+  '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/domains': typeof AuthenticatedDomainsRoute
@@ -727,6 +751,7 @@ export interface FileRoutesByTo {
   '/api/public/cron/sync-followers': typeof ApiPublicCronSyncFollowersRoute
   '/api/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
   '/api/public/mastodon/start': typeof ApiPublicMastodonStartRoute
+  '/api/public/oauth/token': typeof ApiPublicOauthTokenRoute
   '/api/public/og/$handle': typeof ApiPublicOgHandleRoute
   '/api/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
@@ -768,6 +793,8 @@ export interface FileRoutesById {
   '/$username/donate': typeof UsernameDonateRoute
   '/$username/tip': typeof UsernameTipRoute
   '/.well-known/atproto-did': typeof DotwellKnownAtprotoDidRoute
+  '/.well-known/jwks.json': typeof DotwellKnownJwksDotjsonRoute
+  '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/_authenticated/domains': typeof AuthenticatedDomainsRoute
@@ -818,6 +845,7 @@ export interface FileRoutesById {
   '/api_/public/cron/sync-followers': typeof ApiPublicCronSyncFollowersRoute
   '/api_/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
   '/api_/public/mastodon/start': typeof ApiPublicMastodonStartRoute
+  '/api_/public/oauth/token': typeof ApiPublicOauthTokenRoute
   '/api_/public/og/$handle': typeof ApiPublicOgHandleRoute
   '/api_/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api_/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
@@ -859,6 +887,8 @@ export interface FileRouteTypes {
     | '/$username/donate'
     | '/$username/tip'
     | '/.well-known/atproto-did'
+    | '/.well-known/jwks.json'
+    | '/.well-known/openid-configuration'
     | '/admin'
     | '/dashboard'
     | '/domains'
@@ -909,6 +939,7 @@ export interface FileRouteTypes {
     | '/api/public/cron/sync-followers'
     | '/api/public/cron/sync-socials'
     | '/api/public/mastodon/start'
+    | '/api/public/oauth/token'
     | '/api/public/og/$handle'
     | '/api/public/session/logout'
     | '/api/public/webhooks/banking'
@@ -947,6 +978,8 @@ export interface FileRouteTypes {
     | '/$username/donate'
     | '/$username/tip'
     | '/.well-known/atproto-did'
+    | '/.well-known/jwks.json'
+    | '/.well-known/openid-configuration'
     | '/admin'
     | '/dashboard'
     | '/domains'
@@ -997,6 +1030,7 @@ export interface FileRouteTypes {
     | '/api/public/cron/sync-followers'
     | '/api/public/cron/sync-socials'
     | '/api/public/mastodon/start'
+    | '/api/public/oauth/token'
     | '/api/public/og/$handle'
     | '/api/public/session/logout'
     | '/api/public/webhooks/banking'
@@ -1037,6 +1071,8 @@ export interface FileRouteTypes {
     | '/$username/donate'
     | '/$username/tip'
     | '/.well-known/atproto-did'
+    | '/.well-known/jwks.json'
+    | '/.well-known/openid-configuration'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/domains'
@@ -1087,6 +1123,7 @@ export interface FileRouteTypes {
     | '/api_/public/cron/sync-followers'
     | '/api_/public/cron/sync-socials'
     | '/api_/public/mastodon/start'
+    | '/api_/public/oauth/token'
     | '/api_/public/og/$handle'
     | '/api_/public/session/logout'
     | '/api_/public/webhooks/banking'
@@ -1125,6 +1162,8 @@ export interface RootRouteChildren {
   VerifyRoute: typeof VerifyRoute
   WifiQrRoute: typeof WifiQrRoute
   DotwellKnownAtprotoDidRoute: typeof DotwellKnownAtprotoDidRoute
+  DotwellKnownJwksDotjsonRoute: typeof DotwellKnownJwksDotjsonRoute
+  DotwellKnownOpenidConfigurationRoute: typeof DotwellKnownOpenidConfigurationRoute
   AccountAccountViewRoute: typeof AccountAccountViewRoute
   ApiPaymentStatusRoute: typeof ApiPaymentStatusRoute
   DevEmailsRoute: typeof DevEmailsRoute
@@ -1152,6 +1191,7 @@ export interface RootRouteChildren {
   ApiPublicCronSyncFollowersRoute: typeof ApiPublicCronSyncFollowersRoute
   ApiPublicCronSyncSocialsRoute: typeof ApiPublicCronSyncSocialsRoute
   ApiPublicMastodonStartRoute: typeof ApiPublicMastodonStartRoute
+  ApiPublicOauthTokenRoute: typeof ApiPublicOauthTokenRoute
   ApiPublicOgHandleRoute: typeof ApiPublicOgHandleRoute
   ApiPublicSessionLogoutRoute: typeof ApiPublicSessionLogoutRoute
   ApiPublicWebhooksBankingRoute: typeof ApiPublicWebhooksBankingRoute
@@ -1396,6 +1436,20 @@ declare module '@tanstack/react-router' {
       path: '/.well-known/atproto-did'
       fullPath: '/.well-known/atproto-did'
       preLoaderRoute: typeof DotwellKnownAtprotoDidRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/jwks.json': {
+      id: '/.well-known/jwks.json'
+      path: '/.well-known/jwks.json'
+      fullPath: '/.well-known/jwks.json'
+      preLoaderRoute: typeof DotwellKnownJwksDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/openid-configuration': {
+      id: '/.well-known/openid-configuration'
+      path: '/.well-known/openid-configuration'
+      fullPath: '/.well-known/openid-configuration'
+      preLoaderRoute: typeof DotwellKnownOpenidConfigurationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -1748,6 +1802,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicMastodonStartRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api_/public/oauth/token': {
+      id: '/api_/public/oauth/token'
+      path: '/api/public/oauth/token'
+      fullPath: '/api/public/oauth/token'
+      preLoaderRoute: typeof ApiPublicOauthTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api_/public/og/$handle': {
       id: '/api_/public/og/$handle'
       path: '/api/public/og/$handle'
@@ -1930,6 +1991,8 @@ const rootRouteChildren: RootRouteChildren = {
   VerifyRoute: VerifyRoute,
   WifiQrRoute: WifiQrRoute,
   DotwellKnownAtprotoDidRoute: DotwellKnownAtprotoDidRoute,
+  DotwellKnownJwksDotjsonRoute: DotwellKnownJwksDotjsonRoute,
+  DotwellKnownOpenidConfigurationRoute: DotwellKnownOpenidConfigurationRoute,
   AccountAccountViewRoute: AccountAccountViewRoute,
   ApiPaymentStatusRoute: ApiPaymentStatusRoute,
   DevEmailsRoute: DevEmailsRoute,
@@ -1958,6 +2021,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicCronSyncFollowersRoute: ApiPublicCronSyncFollowersRoute,
   ApiPublicCronSyncSocialsRoute: ApiPublicCronSyncSocialsRoute,
   ApiPublicMastodonStartRoute: ApiPublicMastodonStartRoute,
+  ApiPublicOauthTokenRoute: ApiPublicOauthTokenRoute,
   ApiPublicOgHandleRoute: ApiPublicOgHandleRoute,
   ApiPublicSessionLogoutRoute: ApiPublicSessionLogoutRoute,
   ApiPublicWebhooksBankingRoute: ApiPublicWebhooksBankingRoute,

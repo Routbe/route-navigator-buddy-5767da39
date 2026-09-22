@@ -119,6 +119,8 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
   const [loading, setLoading] = useState(false);
   const [blueskyOpen, setBlueskyOpen] = useState(false);
   const [blueskyHandle, setBlueskyHandle] = useState("");
+  const [mastodonOpen, setMastodonOpen] = useState(false);
+  const [mastodonInstance, setMastodonInstance] = useState("");
   const redirected = useRef(false);
 
   useEffect(() => {
@@ -130,7 +132,8 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
   // Een mislukte Bluesky-poging komt terug met een leesbare uitleg in de URL.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const message = new URLSearchParams(window.location.search).get("bluesky_error");
+    const params = new URLSearchParams(window.location.search);
+    const message = params.get("bluesky_error") ?? params.get("mastodon_error");
     if (message) {
       toast.error(message);
       window.history.replaceState({}, "", window.location.pathname);
@@ -294,11 +297,19 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
               <button
                 key={tile.id}
                 type="button"
-                onClick={() =>
-                  tile.provider === "bluesky"
-                    ? setBlueskyOpen((open) => !open)
-                    : void oauth(tile.provider)
-                }
+                onClick={() => {
+                  if (tile.provider === "bluesky") {
+                    setMastodonOpen(false);
+                    setBlueskyOpen((open) => !open);
+                    return;
+                  }
+                  if (tile.provider === "mastodon") {
+                    setBlueskyOpen(false);
+                    setMastodonOpen((open) => !open);
+                    return;
+                  }
+                  void oauth(tile.provider);
+                }}
                 disabled={loading}
                 aria-label={`Verder met ${tile.label}`}
                 title={`Verder met ${tile.label}`}
@@ -349,6 +360,40 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
               </Button>
             </form>
           )}
+
+          {mastodonOpen && (
+            <form
+              className="mt-2 flex items-center gap-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                const instance = mastodonInstance
+                  .trim()
+                  .replace(/^@/, "")
+                  .replace(/^https?:\/\//i, "")
+                  .replace(/\/.*$/, "")
+                  .toLowerCase();
+                if (!instance.includes(".")) {
+                  toast.error("Geef de server op waar je account staat, bijvoorbeeld mastodon.social.");
+                  return;
+                }
+                setLoading(true);
+                window.location.href = `/api/public/mastodon/start?instance=${encodeURIComponent(instance)}&next=${encodeURIComponent("/dashboard")}`;
+              }}
+            >
+              <Input
+                value={mastodonInstance}
+                onChange={(e) => setMastodonInstance(e.target.value)}
+                placeholder="mastodon.social"
+                aria-label="Fediverse-server"
+                autoComplete="url"
+                className="h-10 rounded-lg"
+              />
+              <Button type="submit" className="h-10 rounded-lg" disabled={loading}>
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : "Verder"}
+              </Button>
+            </form>
+          )}
+
 
           <p className="mt-1.5 flex items-center gap-1 text-[11px] text-muted-foreground">
             <ShieldCheck className="h-3 w-3 shrink-0" aria-hidden /> {t("auth.sso.note")}
