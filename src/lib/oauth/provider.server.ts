@@ -274,7 +274,8 @@ async function consumeCode(code: string) {
 
 /* ----------------------------------------------------------- signing keys */
 
-type KeyRecord = { kid: string; privateJwk: JsonWebKey; publicJwk: JsonWebKey };
+type Jwk = JsonWebKey & { kid?: string; alg?: string; use?: string };
+type KeyRecord = { kid: string; privateJwk: Jwk; publicJwk: Jwk };
 
 async function activeKey(): Promise<KeyRecord> {
   await ensureTables();
@@ -283,8 +284,8 @@ async function activeKey(): Promise<KeyRecord> {
   if (rows[0]) {
     return {
       kid: String(rows[0]["kid"]),
-      privateJwk: rows[0]["private_jwk"] as JsonWebKey,
-      publicJwk: rows[0]["public_jwk"] as JsonWebKey,
+      privateJwk: rows[0]["private_jwk"] as Jwk,
+      publicJwk: rows[0]["public_jwk"] as Jwk,
     };
   }
   const pair = (await crypto.subtle.generateKey({ name: "ECDSA", namedCurve: "P-256" }, true, [
@@ -294,18 +295,18 @@ async function activeKey(): Promise<KeyRecord> {
   const privateJwk = await crypto.subtle.exportKey("jwk", pair.privateKey);
   const publicJwk = await crypto.subtle.exportKey("jwk", pair.publicKey);
   const kid = randomToken(8);
-  const withMeta = { ...publicJwk, kid, alg: "ES256", use: "sig" };
+  const withMeta: Jwk = { ...publicJwk, kid, alg: "ES256", use: "sig" };
   await sql`insert into public.oauth_signing_keys (kid, private_jwk, public_jwk)
     values (${kid}, ${JSON.stringify({ ...privateJwk, kid })}, ${JSON.stringify(withMeta)})`;
   return { kid, privateJwk: { ...privateJwk, kid }, publicJwk: withMeta };
 }
 
-export async function publicJwks(): Promise<{ keys: JsonWebKey[] }> {
+export async function publicJwks(): Promise<{ keys: Jwk[] }> {
   await ensureTables();
   const rows = (await sql`select public_jwk from public.oauth_signing_keys
     where retired_at is null order by created_at desc`) as Row[];
   if (rows.length === 0) return { keys: [(await activeKey()).publicJwk] };
-  return { keys: rows.map((r) => r["public_jwk"] as JsonWebKey) };
+  return { keys: rows.map((r) => r["public_jwk"] as Jwk) };
 }
 
 async function signJwt(payload: Record<string, unknown>): Promise<string> {
