@@ -43,6 +43,7 @@ import { Route as UsernameSlugRouteImport } from './routes/$username.$slug'
 import { Route as UsernameDonateRouteImport } from './routes/$username.donate'
 import { Route as UsernameTipRouteImport } from './routes/$username.tip'
 import { Route as DotwellKnownAtprotoDidRouteImport } from './routes/[.]well-known.atproto-did'
+import { Route as DotwellKnownOpenidConfigurationRouteImport } from './routes/[.]well-known.openid-configuration'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDomainsRouteImport } from './routes/_authenticated/domains'
@@ -267,6 +268,12 @@ const DotwellKnownAtprotoDidRoute = DotwellKnownAtprotoDidRouteImport.update({
   path: '/.well-known/atproto-did',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DotwellKnownOpenidConfigurationRoute =
+  DotwellKnownOpenidConfigurationRouteImport.update({
+    id: '/.well-known/openid-configuration',
+    path: '/.well-known/openid-configuration',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -589,6 +596,7 @@ export interface FileRoutesByFullPath {
   '/$username/donate': typeof UsernameDonateRoute
   '/$username/tip': typeof UsernameTipRoute
   '/.well-known/atproto-did': typeof DotwellKnownAtprotoDidRoute
+  '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/domains': typeof AuthenticatedDomainsRoute
@@ -677,6 +685,7 @@ export interface FileRoutesByTo {
   '/$username/donate': typeof UsernameDonateRoute
   '/$username/tip': typeof UsernameTipRoute
   '/.well-known/atproto-did': typeof DotwellKnownAtprotoDidRoute
+  '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/domains': typeof AuthenticatedDomainsRoute
@@ -768,6 +777,7 @@ export interface FileRoutesById {
   '/$username/donate': typeof UsernameDonateRoute
   '/$username/tip': typeof UsernameTipRoute
   '/.well-known/atproto-did': typeof DotwellKnownAtprotoDidRoute
+  '/.well-known/openid-configuration': typeof DotwellKnownOpenidConfigurationRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/_authenticated/domains': typeof AuthenticatedDomainsRoute
@@ -859,6 +869,7 @@ export interface FileRouteTypes {
     | '/$username/donate'
     | '/$username/tip'
     | '/.well-known/atproto-did'
+    | '/.well-known/openid-configuration'
     | '/admin'
     | '/dashboard'
     | '/domains'
@@ -947,6 +958,7 @@ export interface FileRouteTypes {
     | '/$username/donate'
     | '/$username/tip'
     | '/.well-known/atproto-did'
+    | '/.well-known/openid-configuration'
     | '/admin'
     | '/dashboard'
     | '/domains'
@@ -1037,6 +1049,7 @@ export interface FileRouteTypes {
     | '/$username/donate'
     | '/$username/tip'
     | '/.well-known/atproto-did'
+    | '/.well-known/openid-configuration'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/domains'
@@ -1125,6 +1138,7 @@ export interface RootRouteChildren {
   VerifyRoute: typeof VerifyRoute
   WifiQrRoute: typeof WifiQrRoute
   DotwellKnownAtprotoDidRoute: typeof DotwellKnownAtprotoDidRoute
+  DotwellKnownOpenidConfigurationRoute: typeof DotwellKnownOpenidConfigurationRoute
   AccountAccountViewRoute: typeof AccountAccountViewRoute
   ApiPaymentStatusRoute: typeof ApiPaymentStatusRoute
   DevEmailsRoute: typeof DevEmailsRoute
@@ -1396,6 +1410,13 @@ declare module '@tanstack/react-router' {
       path: '/.well-known/atproto-did'
       fullPath: '/.well-known/atproto-did'
       preLoaderRoute: typeof DotwellKnownAtprotoDidRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/openid-configuration': {
+      id: '/.well-known/openid-configuration'
+      path: '/.well-known/openid-configuration'
+      fullPath: '/.well-known/openid-configuration'
+      preLoaderRoute: typeof DotwellKnownOpenidConfigurationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -1930,6 +1951,7 @@ const rootRouteChildren: RootRouteChildren = {
   VerifyRoute: VerifyRoute,
   WifiQrRoute: WifiQrRoute,
   DotwellKnownAtprotoDidRoute: DotwellKnownAtprotoDidRoute,
+  DotwellKnownOpenidConfigurationRoute: DotwellKnownOpenidConfigurationRoute,
   AccountAccountViewRoute: AccountAccountViewRoute,
   ApiPaymentStatusRoute: ApiPaymentStatusRoute,
   DevEmailsRoute: DevEmailsRoute,
