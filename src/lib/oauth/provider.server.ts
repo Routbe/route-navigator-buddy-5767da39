@@ -415,3 +415,66 @@ export async function identityClaims(
   }
   return claims;
 }
+
+/* ----------------------------------------------------- toegang & userinfo */
+
+/** De console staat alleen open voor geverifieerde (betalende) leden. */
+export async function isVerifiedDeveloper(userId: string): Promise<boolean> {
+  const rows = (await sql`select coalesce(verified,false) or coalesce(is_paid,false)
+      or coalesce(is_early_believer,false) as ok
+    from public.profiles where id = ${userId} limit 1`) as Row[];
+  return Boolean(rows[0]?.["ok"]);
+}
+
+/** Verifieert een door ROUT uitgegeven access-token en geeft sub + scopes terug. */
+export async function verifyAccessToken(
+  token: string,
+): Promise<{ sub: string; scopes: string[] }> {
+  const parts = token.split(".");
+  if (parts.length !== 3) throw new OAuthError("invalid_token", "Ongeldig token.");
+  const [headerPart, payloadPart, signaturePart] = parts as [string, string, string];
+  const fromB64 = (value: string) =>
+    Uint8Array.from(atob(value.replace(/-/g, "+").replace(/_/g, "/")), (c) => c.charCodeAt(0));
+  const header = JSON.parse(new TextDecoder().decode(fromB64(headerPart))) as { kid?: string };
+  const { keys } = await publicJwks();
+  const jwk = keys.find((k) => k.kid === header.kid) ?? keys[0];
+  if (!jwk) throw new OAuthError("invalid_token", "Geen ondertekensleutel gevonden.");
+  const key = await crypto.subtle.importKey(
+    "jwk",
+    jwk,
+    { name: "ECDSA", namedCurve: "P-256" },
+    false,
+    ["verify"],
+  );
+  const ok = await crypto.subtle.verify(
+    { name: "ECDSA", hash: "SHA-256" },
+    key,
+    fromB64(signaturePart) as BufferSource,
+    enc.encode(`${headerPart}.${payloadPart}`) as BufferSource,
+  );
+  if (!ok) throw new OAuthError("invalid_token", "Handtekening klopt niet.");
+  const payload = JSON.parse(new TextDecoder().decode(fromB64(payloadPart))) as {
+    sub?: string;
+    exp?: number;
+    scope?: string;
+  };
+  if (!payload.sub) throw new OAuthError("invalid_token", "Token mist een gebruiker.");
+  if ((payload.exp ?? 0) * 1000 < Date.now()) {
+    throw new OAuthError("invalid_token", "Token is verlopen.");
+  }
+  return { sub: payload.sub, scopes: (payload.scope ?? "").split(" ").filter(Boolean) };
+}
+
+/** Bestaande toestemming voor deze app, als die alle gevraagde scopes dekt. */
+export async function hasConsent(
+  userId: string,
+  clientId: string,
+  scopes: string[],
+): Promise<boolean> {
+  await ensureTables();
+  const rows = (await sql`select scopes from public.oauth_consents
+    where user_id = ${userId} and client_id = ${clientId} limit 1`) as Row[];
+  const granted = (rows[0]?.["scopes"] as string[] | null) ?? null;
+  if (!granted) return false;
+  return scopes.every((s) => granted.includes(s));
+}
