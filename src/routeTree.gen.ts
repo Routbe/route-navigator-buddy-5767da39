@@ -58,6 +58,7 @@ import { Route as AuthAuthViewRouteImport } from './routes/auth.$authView'
 import { Route as AuthBlueskyRouteImport } from './routes/auth.bluesky'
 import { Route as DevEmailsRouteImport } from './routes/dev.emails'
 import { Route as GiftCodeRouteImport } from './routes/gift_.$code'
+import { Route as OauthAuthorizeRouteImport } from './routes/oauth.authorize'
 import { Route as RUsernameRouteImport } from './routes/r.$username'
 import { Route as SSlugRouteImport } from './routes/s.$slug'
 import { Route as StatsTokenRouteImport } from './routes/stats.$token'
@@ -96,6 +97,7 @@ import { Route as ApiPublicCronSyncFollowersRouteImport } from './routes/api_.pu
 import { Route as ApiPublicCronSyncSocialsRouteImport } from './routes/api_.public.cron.sync-socials'
 import { Route as ApiPublicMastodonStartRouteImport } from './routes/api_.public.mastodon.start'
 import { Route as ApiPublicOauthTokenRouteImport } from './routes/api_.public.oauth.token'
+import { Route as ApiPublicOauthUserinfoRouteImport } from './routes/api_.public.oauth.userinfo'
 import { Route as ApiPublicOgHandleRouteImport } from './routes/api_.public.og.$handle'
 import { Route as ApiPublicSessionLogoutRouteImport } from './routes/api_.public.session.logout'
 import { Route as ApiPublicWebhooksBankingRouteImport } from './routes/api_.public.webhooks.banking'
@@ -346,6 +348,11 @@ const GiftCodeRoute = GiftCodeRouteImport.update({
   path: '/gift/$code',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OauthAuthorizeRoute = OauthAuthorizeRouteImport.update({
+  id: '/oauth/authorize',
+  path: '/oauth/authorize',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RUsernameRoute = RUsernameRouteImport.update({
   id: '/r/$username',
   path: '/r/$username',
@@ -551,6 +558,11 @@ const ApiPublicOauthTokenRoute = ApiPublicOauthTokenRouteImport.update({
   path: '/api/public/oauth/token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicOauthUserinfoRoute = ApiPublicOauthUserinfoRouteImport.update({
+  id: '/api_/public/oauth/userinfo',
+  path: '/api/public/oauth/userinfo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicOgHandleRoute = ApiPublicOgHandleRouteImport.update({
   id: '/api_/public/og/$handle',
   path: '/api/public/og/$handle',
@@ -622,6 +634,7 @@ export interface FileRoutesByFullPath {
   '/auth/bluesky': typeof AuthBlueskyRoute
   '/dev/emails': typeof DevEmailsRoute
   '/gift/$code': typeof GiftCodeRoute
+  '/oauth/authorize': typeof OauthAuthorizeRoute
   '/r/$username': typeof RUsernameRoute
   '/s/$slug': typeof SSlugRoute
   '/stats/$token': typeof StatsTokenRoute
@@ -661,6 +674,7 @@ export interface FileRoutesByFullPath {
   '/api/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
   '/api/public/mastodon/start': typeof ApiPublicMastodonStartRoute
   '/api/public/oauth/token': typeof ApiPublicOauthTokenRoute
+  '/api/public/oauth/userinfo': typeof ApiPublicOauthUserinfoRoute
   '/api/public/og/$handle': typeof ApiPublicOgHandleRoute
   '/api/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
@@ -713,6 +727,7 @@ export interface FileRoutesByTo {
   '/auth/bluesky': typeof AuthBlueskyRoute
   '/dev/emails': typeof DevEmailsRoute
   '/gift/$code': typeof GiftCodeRoute
+  '/oauth/authorize': typeof OauthAuthorizeRoute
   '/r/$username': typeof RUsernameRoute
   '/s/$slug': typeof SSlugRoute
   '/stats/$token': typeof StatsTokenRoute
@@ -752,6 +767,7 @@ export interface FileRoutesByTo {
   '/api/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
   '/api/public/mastodon/start': typeof ApiPublicMastodonStartRoute
   '/api/public/oauth/token': typeof ApiPublicOauthTokenRoute
+  '/api/public/oauth/userinfo': typeof ApiPublicOauthUserinfoRoute
   '/api/public/og/$handle': typeof ApiPublicOgHandleRoute
   '/api/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
@@ -807,6 +823,7 @@ export interface FileRoutesById {
   '/auth/bluesky': typeof AuthBlueskyRoute
   '/dev/emails': typeof DevEmailsRoute
   '/gift_/$code': typeof GiftCodeRoute
+  '/oauth/authorize': typeof OauthAuthorizeRoute
   '/r/$username': typeof RUsernameRoute
   '/s/$slug': typeof SSlugRoute
   '/stats/$token': typeof StatsTokenRoute
@@ -846,6 +863,7 @@ export interface FileRoutesById {
   '/api_/public/cron/sync-socials': typeof ApiPublicCronSyncSocialsRoute
   '/api_/public/mastodon/start': typeof ApiPublicMastodonStartRoute
   '/api_/public/oauth/token': typeof ApiPublicOauthTokenRoute
+  '/api_/public/oauth/userinfo': typeof ApiPublicOauthUserinfoRoute
   '/api_/public/og/$handle': typeof ApiPublicOgHandleRoute
   '/api_/public/session/logout': typeof ApiPublicSessionLogoutRoute
   '/api_/public/webhooks/banking': typeof ApiPublicWebhooksBankingRoute
@@ -901,6 +919,7 @@ export interface FileRouteTypes {
     | '/auth/bluesky'
     | '/dev/emails'
     | '/gift/$code'
+    | '/oauth/authorize'
     | '/r/$username'
     | '/s/$slug'
     | '/stats/$token'
@@ -940,6 +959,7 @@ export interface FileRouteTypes {
     | '/api/public/cron/sync-socials'
     | '/api/public/mastodon/start'
     | '/api/public/oauth/token'
+    | '/api/public/oauth/userinfo'
     | '/api/public/og/$handle'
     | '/api/public/session/logout'
     | '/api/public/webhooks/banking'
@@ -992,6 +1012,7 @@ export interface FileRouteTypes {
     | '/auth/bluesky'
     | '/dev/emails'
     | '/gift/$code'
+    | '/oauth/authorize'
     | '/r/$username'
     | '/s/$slug'
     | '/stats/$token'
@@ -1031,6 +1052,7 @@ export interface FileRouteTypes {
     | '/api/public/cron/sync-socials'
     | '/api/public/mastodon/start'
     | '/api/public/oauth/token'
+    | '/api/public/oauth/userinfo'
     | '/api/public/og/$handle'
     | '/api/public/session/logout'
     | '/api/public/webhooks/banking'
@@ -1085,6 +1107,7 @@ export interface FileRouteTypes {
     | '/auth/bluesky'
     | '/dev/emails'
     | '/gift_/$code'
+    | '/oauth/authorize'
     | '/r/$username'
     | '/s/$slug'
     | '/stats/$token'
@@ -1124,6 +1147,7 @@ export interface FileRouteTypes {
     | '/api_/public/cron/sync-socials'
     | '/api_/public/mastodon/start'
     | '/api_/public/oauth/token'
+    | '/api_/public/oauth/userinfo'
     | '/api_/public/og/$handle'
     | '/api_/public/session/logout'
     | '/api_/public/webhooks/banking'
@@ -1168,6 +1192,7 @@ export interface RootRouteChildren {
   ApiPaymentStatusRoute: typeof ApiPaymentStatusRoute
   DevEmailsRoute: typeof DevEmailsRoute
   GiftCodeRoute: typeof GiftCodeRoute
+  OauthAuthorizeRoute: typeof OauthAuthorizeRoute
   RUsernameRoute: typeof RUsernameRoute
   SSlugRoute: typeof SSlugRoute
   StatsTokenRoute: typeof StatsTokenRoute
@@ -1192,6 +1217,7 @@ export interface RootRouteChildren {
   ApiPublicCronSyncSocialsRoute: typeof ApiPublicCronSyncSocialsRoute
   ApiPublicMastodonStartRoute: typeof ApiPublicMastodonStartRoute
   ApiPublicOauthTokenRoute: typeof ApiPublicOauthTokenRoute
+  ApiPublicOauthUserinfoRoute: typeof ApiPublicOauthUserinfoRoute
   ApiPublicOgHandleRoute: typeof ApiPublicOgHandleRoute
   ApiPublicSessionLogoutRoute: typeof ApiPublicSessionLogoutRoute
   ApiPublicWebhooksBankingRoute: typeof ApiPublicWebhooksBankingRoute
@@ -1543,6 +1569,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GiftCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/oauth/authorize': {
+      id: '/oauth/authorize'
+      path: '/oauth/authorize'
+      fullPath: '/oauth/authorize'
+      preLoaderRoute: typeof OauthAuthorizeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/r/$username': {
       id: '/r/$username'
       path: '/r/$username'
@@ -1809,6 +1842,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicOauthTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api_/public/oauth/userinfo': {
+      id: '/api_/public/oauth/userinfo'
+      path: '/api/public/oauth/userinfo'
+      fullPath: '/api/public/oauth/userinfo'
+      preLoaderRoute: typeof ApiPublicOauthUserinfoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api_/public/og/$handle': {
       id: '/api_/public/og/$handle'
       path: '/api/public/og/$handle'
@@ -1997,6 +2037,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPaymentStatusRoute: ApiPaymentStatusRoute,
   DevEmailsRoute: DevEmailsRoute,
   GiftCodeRoute: GiftCodeRoute,
+  OauthAuthorizeRoute: OauthAuthorizeRoute,
   RUsernameRoute: RUsernameRoute,
   SSlugRoute: SSlugRoute,
   StatsTokenRoute: StatsTokenRoute,
@@ -2022,6 +2063,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicCronSyncSocialsRoute: ApiPublicCronSyncSocialsRoute,
   ApiPublicMastodonStartRoute: ApiPublicMastodonStartRoute,
   ApiPublicOauthTokenRoute: ApiPublicOauthTokenRoute,
+  ApiPublicOauthUserinfoRoute: ApiPublicOauthUserinfoRoute,
   ApiPublicOgHandleRoute: ApiPublicOgHandleRoute,
   ApiPublicSessionLogoutRoute: ApiPublicSessionLogoutRoute,
   ApiPublicWebhooksBankingRoute: ApiPublicWebhooksBankingRoute,
