@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/accordion";
 import { CodeBlock } from "@/components/CodeBlock";
 import { StatusWidget } from "@/components/StatusWidget";
+import { OAuthConsole } from "@/components/dev/OAuthConsole";
 import { MCP_TOOLS, type McpToolDef } from "@/lib/mcp-tools";
 import { createApiKey, listApiKeys, revokeApiKey } from "@/lib/api-keys.functions";
 import {
@@ -787,6 +788,7 @@ print(create_qr())`,
           <TabsTrigger value="mcp">MCP</TabsTrigger>
           <TabsTrigger value="tools">Tools</TabsTrigger>
           <TabsTrigger value="keys">API keys</TabsTrigger>
+          <TabsTrigger value="oauth">Login met ROUT</TabsTrigger>
           <TabsTrigger value="quickstart">Quickstart</TabsTrigger>
         </TabsList>
 
@@ -860,6 +862,16 @@ print(create_qr())`,
 
         <TabsContent value="keys" className="mt-6">
           <ApiKeys />
+        </TabsContent>
+
+        <TabsContent value="oauth" className="mt-6">
+          {user ? (
+            <OAuthConsole />
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Meld je aan om apps voor "Login met ROUT" te beheren.
+            </p>
+          )}
         </TabsContent>
 
         <TabsContent value="quickstart" className="mt-6 space-y-5">
