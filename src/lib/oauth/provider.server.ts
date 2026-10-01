@@ -9,7 +9,7 @@
 import { sql } from "@/lib/neon";
 import { canonicalAppUrl } from "@/lib/app-url";
 
-export const SUPPORTED_SCOPES = ["openid", "profile", "email"] as const;
+export const SUPPORTED_SCOPES = ["openid", "profile", "email", "linked_accounts"] as const;
 export type Scope = (typeof SUPPORTED_SCOPES)[number];
 
 const CODE_TTL_MS = 60 * 1000;
@@ -412,6 +412,19 @@ export async function identityClaims(
   if (scopes.includes("email")) {
     claims["email"] = row["email"] ?? null;
     claims["email_verified"] = Boolean(row["email_confirmed_at"]);
+  }
+  if (scopes.includes("linked_accounts")) {
+    // Alleen dienst + account-ID: genoeg om dubbele accounts bij de app te voorkomen.
+    try {
+      const linked = (await sql`select provider, provider_account_id from public.user_identities
+        where user_id = ${userId} order by provider, created_at`) as Row[];
+      claims["linked_accounts"] = linked.map((l) => ({
+        provider: l["provider"],
+        account_id: l["provider_account_id"],
+      }));
+    } catch {
+      claims["linked_accounts"] = [];
+    }
   }
   return claims;
 }

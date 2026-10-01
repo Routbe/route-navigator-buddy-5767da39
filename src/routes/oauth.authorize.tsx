@@ -62,6 +62,8 @@ const SCOPE_TEXT: Record<string, string> = {
   openid: "Bevestigen dat jij het bent (je ROUT-accountnummer).",
   profile: "Je publieke naam, handle en profielfoto bekijken.",
   email: "Je e-mailadres bekijken en of het bevestigd is.",
+  linked_accounts:
+    "Zien welke accounts (bv. Google, GitHub) je aan ROUT koppelde, zodat de app een bestaand account herkent.",
 };
 
 function AuthorizePage() {
