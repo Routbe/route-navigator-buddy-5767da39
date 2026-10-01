@@ -34,6 +34,10 @@ const SCOPES = [
   { id: "openid", label: "openid — bevestigt wie de gebruiker is (verplicht)" },
   { id: "profile", label: "profile — naam, handle en profielfoto" },
   { id: "email", label: "email — e-mailadres en of het bevestigd is" },
+  {
+    id: "linked_accounts",
+    label: "linked_accounts — gekoppelde accounts (Google, GitHub…) om dubbele accounts te voorkomen",
+  },
 ];
 
 const empty = {
@@ -301,6 +305,15 @@ export function OAuthConsole() {
                   {scope.label}
                 </label>
               ))}
+              <div className="mt-4 rounded-md border border-border bg-muted/40 p-3 text-xs text-muted-foreground">
+                <p className="mb-2 font-medium text-foreground">Dubbele accounts voorkomen</p>
+                <pre className="whitespace-pre-wrap font-mono">{`// na de tokenruil: GET /api/public/oauth/userinfo
+let user = await db.findBy({ rout_sub: info.sub });
+if (!user) for (const a of info.linked_accounts ?? [])
+  user ??= await db.findBy({ provider: a.provider, provider_id: a.account_id });
+if (!user && info.email_verified) user = await db.findBy({ email: info.email });
+user ? await db.link(user, { rout_sub: info.sub }) : await db.create(info);`}</pre>
+              </div>
             </TabsContent>
           </Tabs>
 
