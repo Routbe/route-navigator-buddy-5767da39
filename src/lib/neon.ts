@@ -27,8 +27,11 @@ const NEON_AUTH_URL =
  * first-party; zo lekt er nooit een `neon.tech`- of preview-URL naar de
  * gebruiker en blijft de OAuth-redirect-URI exact hetzelfde.
  */
+// Altijd same-origin: een cross-origin fetch naar rout.be vanaf www/preview
+// faalt met "Failed to fetch". Alleen callback-URL's gebruiken de canonieke origin.
+void canonicalAppUrl;
 const AUTH_CLIENT_URL =
-  typeof window === "undefined" ? NEON_AUTH_URL : `${canonicalAppUrl()}/api/auth`;
+  typeof window === "undefined" ? NEON_AUTH_URL : `${window.location.origin}/api/auth`;
 
 export const neonAuth = createAuthClient(AUTH_CLIENT_URL, {
   adapter: BetterAuthReactAdapter(),
