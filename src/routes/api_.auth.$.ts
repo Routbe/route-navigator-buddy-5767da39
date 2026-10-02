@@ -40,7 +40,13 @@ function normalizeOrigin(request: Request): Request {
   const headers = new Headers(request.headers);
   headers.set("origin", canonicalAppUrl());
   headers.delete("referer");
-  return new Request(request, { headers });
+  const hasBody = request.method !== "GET" && request.method !== "HEAD";
+  return new Request(request.url, {
+    method: request.method,
+    headers,
+    body: hasBody ? await request.arrayBuffer() : undefined,
+    redirect: "manual",
+  });
 }
 
 async function proxy({ request, params }: { request: Request; params: { _splat?: string } }) {
