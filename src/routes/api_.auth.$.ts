@@ -16,7 +16,7 @@ import { canonicalAppUrl, isApprovedHost } from "@/lib/app-url";
  * sign-up and magic links work everywhere. Cross-site requests are left
  * untouched and are still rejected upstream.
  */
-function normalizeOrigin(request: Request): Request {
+async function normalizeOrigin(request: Request): Promise<Request> {
   const origin = request.headers.get("origin");
   if (!origin) return request;
   let originHost: string;
@@ -51,7 +51,7 @@ function normalizeOrigin(request: Request): Request {
 
 async function proxy({ request, params }: { request: Request; params: { _splat?: string } }) {
   return handleAuthProxyRequest({
-    request: normalizeOrigin(request),
+    request: await normalizeOrigin(request),
     path: params._splat ?? "",
     baseUrl: NEON_AUTH_BASE_URL,
     cookieSecret: getCookieSecret(),
