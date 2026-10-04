@@ -317,7 +317,7 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
 
           <div
             data-testid="auth-provider-tiles"
-            className="mt-1 grid grid-cols-3 gap-2 sm:grid-cols-5"
+            className="mt-1 grid grid-cols-4 gap-2 sm:grid-cols-7"
           >
             {TILES.map((tile) => (
               <button
