@@ -85,7 +85,18 @@ const TILES: { id: string; label: string; provider: string; mark: string; color:
     mark: BRAND_ICONS.bluesky!.path,
     color: BRAND_ICONS.bluesky!.color,
   },
+  {
+    id: "infomaniak",
+    label: "Infomaniak",
+    provider: "infomaniak",
+    // Minimalistisch wolk-symbool in Infomaniak-blauw.
+    mark: "M6.5 19a4.5 4.5 0 0 1-.42-8.98A6 6 0 0 1 17.7 8.6 5 5 0 0 1 17.5 19h-11Z",
+    color: "#0098FF",
+  },
 ];
+
+/** Providers die via Better Auth's generic OAuth/OIDC-plugin lopen. */
+const GENERIC_OAUTH = new Set(["oidc", "infomaniak"]);
 
 /** Deliberately permissive: catches typos, never rejects a valid address. */
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -161,6 +172,21 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
   const oauth = async (provider: string) => {
     setLoading(true);
     try {
+      if (GENERIC_OAUTH.has(provider)) {
+        const res = await fetch("/api/auth/sign-in/oauth2", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ providerId: provider, callbackURL }),
+        });
+        const body = (await res.json().catch(() => null)) as { url?: string; message?: string } | null;
+        if (res.ok && body?.url) {
+          window.location.href = body.url;
+          return;
+        }
+        toast.error(body?.message || "Deze aanmeldwijze is nog niet ingesteld.");
+        return;
+      }
       const result = await neonAuth.signIn.social({ provider, callbackURL });
       const error = (result as { error?: { message?: string } } | undefined)?.error;
       if (error) toast.error(error.message || t("auth.toast.failed"));
@@ -291,7 +317,7 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
 
           <div
             data-testid="auth-provider-tiles"
-            className="mt-1 grid grid-cols-3 gap-2 sm:grid-cols-5"
+            className="mt-1 grid grid-cols-4 gap-2 sm:grid-cols-7"
           >
             {TILES.map((tile) => (
               <button
