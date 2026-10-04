@@ -82,15 +82,33 @@ export function createRoutAuth(request?: Request) {
     }),
   ];
 
+  const genericConfigs: unknown[] = [];
   const oidc = pair("OIDC_CLIENT_ID", "OIDC_CLIENT_SECRET");
   const discoveryUrl = env("OIDC_DISCOVERY_URL");
   if (oidc && discoveryUrl) {
-    plugins.push(
-      genericOAuth({
-        config: [{ providerId: "oidc", discoveryUrl, ...oidc, scopes: ["openid", "email", "profile"], pkce: true }],
-      }),
-    );
+    genericConfigs.push({ providerId: "oidc", discoveryUrl, ...oidc, scopes: ["openid", "email", "profile"], pkce: true });
   }
+  // Infomaniak (Zwitserland) — native OIDC, geen tussenpartij.
+  const infomaniak = pair("INFOMANIAK_CLIENT_ID", "INFOMANIAK_CLIENT_SECRET");
+  if (infomaniak) {
+    genericConfigs.push({
+      providerId: "infomaniak",
+      ...infomaniak,
+      authorizationUrl: "https://login.infomaniak.com/authorize",
+      tokenUrl: "https://login.infomaniak.com/token",
+      userInfoUrl: "https://login.infomaniak.com/oauth2/userinfo",
+      scopes: ["openid", "email", "profile"],
+      pkce: true,
+      mapProfileToUser: (p: Record<string, unknown>) => ({
+        email: typeof p["email"] === "string" ? (p["email"] as string).toLowerCase() : undefined,
+        name: (p["name"] as string) ?? (p["display_name"] as string) ?? undefined,
+        image: (p["picture"] as string) ?? undefined,
+        // Alleen expliciet bevestigde adressen gelden als geverifieerd.
+        emailVerified: p["email_verified"] === true,
+      }),
+    });
+  }
+  if (genericConfigs.length) plugins.push(genericOAuth({ config: genericConfigs as never }));
 
   const origin = requestOrigin(request);
 
@@ -142,5 +160,6 @@ export function enabledProviders(): string[] {
   if (pair("GITLAB_CLIENT_ID", "GITLAB_CLIENT_SECRET")) list.push("gitlab");
   if (pair("APPLE_CLIENT_ID", "APPLE_CLIENT_SECRET")) list.push("apple");
   if (pair("OIDC_CLIENT_ID", "OIDC_CLIENT_SECRET") && env("OIDC_DISCOVERY_URL")) list.push("oidc");
+  if (pair("INFOMANIAK_CLIENT_ID", "INFOMANIAK_CLIENT_SECRET")) list.push("infomaniak");
   return list;
 }

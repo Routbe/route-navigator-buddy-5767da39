@@ -115,6 +115,9 @@ export async function bridgeIdentity(identity: NeonAuthIdentity): Promise<Sessio
   if (row) {
     if (row["is_disabled"]) return null;
     const meta = (row["user_metadata"] as Record<string, unknown> | null) ?? {};
+    // Nooit samenvoegen op een onbevestigd e-mailadres (bv. Infomaniak/OIDC
+    // zonder email_verified): alleen een al gekoppelde identiteit mag binnen.
+    if (meta["neon_auth_id"] !== identity.id && !identity.emailVerified) return null;
     if (meta["neon_auth_id"] !== identity.id) {
       await sql`
         update public.users
@@ -144,7 +147,7 @@ export async function bridgeIdentity(identity: NeonAuthIdentity): Promise<Sessio
                 last_sign_in_at
     `) as Row[];
     row = inserted[0] ?? null;
-    if (row) {
+    if (row && identity.emailVerified) {
       const { ensureOwnerAdmin } = await import("@/lib/auth/owner-admin.server");
       await ensureOwnerAdmin(row["id"] as string, email);
     }
