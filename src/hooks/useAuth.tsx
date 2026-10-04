@@ -2,13 +2,13 @@ import { createContext, useCallback, useContext, useEffect, useState, ReactNode 
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import { getSessionUser, type AuthUser } from "@/lib/auth.functions";
-import { neonAuth } from "@/lib/neon";
+import { authClient } from "@/lib/auth-client";
 import { syncSignupProfile } from "@/lib/signup-profile.functions";
 import { claimReferral } from "@/lib/referral.functions";
 import { clearReferrer, readReferrer } from "@/lib/referral";
 
 /**
- * Session state for the Neon-native auth layer.
+ * Session state for ROUT's self-hosted Better Auth layer.
  *
  * The session itself lives in an httpOnly cookie that the browser cannot read,
  * so the current user is fetched from the server once on mount and refreshed
@@ -92,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await queryClient.cancelQueries();
     queryClient.clear();
     try {
-      await neonAuth.signOut();
+      await authClient.signOut();
     } catch {
       /* the cookie is cleared server-side; a network hiccup must not trap the user */
     }

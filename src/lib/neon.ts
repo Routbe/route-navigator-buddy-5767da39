@@ -1,41 +1,13 @@
 import { neon as neonSql, type NeonQueryFunction } from "@neondatabase/serverless";
-import { createAuthClient } from "@neondatabase/neon-js/auth";
-import { BetterAuthReactAdapter } from "@neondatabase/neon-js/auth/react/adapters";
-import { canonicalAppUrl } from "@/lib/app-url";
 
 /**
- * Neon-clients voor project ROUT.
+ * Server-only Neon Postgres client for ROUT.
  *
- * `neonAuth` — Neon Auth (Better Auth) client voor de browser: sign-up,
- *              sign-in en sessiebeheer via de Neon Auth service. Veilig voor
- *              de client bundle; de URL is publiek (VITE_NEON_AUTH_URL).
- *
- * `sql`      — Server-only Neon Postgres client. De driver wordt lazy
- *              aangemaakt zodat een ontbrekende DATABASE_URL de module-
- *              evaluatie niet laat crashen. Alleen gebruiken in server
- *              functions of route handlers; DATABASE_URL komt nooit in de
- *              client bundle terecht.
+ * The driver is created lazily so a missing DATABASE_URL never crashes module
+ * evaluation. Only use inside server functions or route handlers; DATABASE_URL
+ * never reaches the client bundle. Authentication is handled by our own
+ * Better Auth server (see `better-auth.server.ts`), not by this module.
  */
-
-const NEON_AUTH_URL =
-  import.meta.env.VITE_NEON_AUTH_URL ??
-  "https://ep-autumn-salad-b1wk95js.neonauth.c-5.eu-central-1.aws.neon.tech/neondb/auth";
-
-/**
- * In de browser praten we uitsluitend met onze eigen canonieke origin
- * (`/api/auth/*`). Die route proxyt naar Neon Auth en maakt de sessiecookie
- * first-party; zo lekt er nooit een `neon.tech`- of preview-URL naar de
- * gebruiker en blijft de OAuth-redirect-URI exact hetzelfde.
- */
-// Altijd same-origin: een cross-origin fetch naar rout.be vanaf www/preview
-// faalt met "Failed to fetch". Alleen callback-URL's gebruiken de canonieke origin.
-void canonicalAppUrl;
-const AUTH_CLIENT_URL =
-  typeof window === "undefined" ? NEON_AUTH_URL : `${window.location.origin}/api/auth`;
-
-export const neonAuth = createAuthClient(AUTH_CLIENT_URL, {
-  adapter: BetterAuthReactAdapter(),
-});
 
 let client: NeonQueryFunction<false, false> | null = null;
 

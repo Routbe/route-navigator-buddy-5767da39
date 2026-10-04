@@ -1,10 +1,10 @@
-import { getBridgedUser } from "@/lib/neon-auth.server";
+import { getBridgedUser } from "@/lib/auth/bridge.server";
 
 /**
  * Session resolution for ROUT.
  *
- * There is no home-grown session store any more: Neon Auth owns sign-in,
- * sign-up and the session cookie. This module only turns that session into the
+ * There is no extra session store: Better Auth owns sign-in,
+ * sign-up and the session cookie (self-hosted Better Auth). This module only turns that session into the
  * `public.users` record the rest of the app has always worked with, so every
  * foreign key (QR codes, domains, statistics) keeps resolving unchanged.
  */
@@ -36,7 +36,7 @@ export function toSessionUser(row: Row): SessionUser {
 /**
  * The signed-in member for the in-flight request, or null when signed out.
  *
- * Neon Auth is the main door. Sign-in methods that Neon Auth does not host —
+ * Better Auth is the main door. Sign-in methods it does not host —
  * today only Bluesky — leave their own signed, httpOnly cookie behind, which
  * is checked second.
  */
