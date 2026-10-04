@@ -1,66 +1,17 @@
-import { createAuthServer } from "@neondatabase/neon-js/auth/server";
 import type { SessionUser } from "@/lib/auth/session.server";
 import { sql } from "@/lib/neon";
-import { canonicalAppUrl, isApprovedHost } from "@/lib/app-url";
 
 /**
- * Neon Auth — server side.
+ * Better Auth (self-hosted, System A) → `public.users` bridge.
  *
- * Neon Auth is the only credential store for ROUT: sign-up, sign-in, social
- * login and password resets all happen against the Neon Auth service. The
- * browser talks to it through our own origin (`/api/auth/*`), so its session
- * cookie is first-party and readable here.
- *
- * Every Neon Auth identity is bridged onto the existing `public.users` row
- * (matched on e-mail, created on first sign-in) so all foreign keys — QR
- * codes, domains, statistics — keep pointing at the same id they always did.
+ * Better Auth owns credentials and the session cookie (tables in the
+ * `neon_auth` schema of our own Postgres). Every identity is mapped onto the
+ * existing `public.users` row so all foreign keys keep resolving. The
+ * metadata key `neon_auth_id` is kept for backwards compatibility: it holds
+ * the Better Auth user id.
  */
 
-export const NEON_AUTH_BASE_URL =
-  process.env["NEON_AUTH_URL"] ??
-  process.env["VITE_NEON_AUTH_URL"] ??
-  "https://ep-autumn-salad-b1wk95js.neonauth.c-5.eu-central-1.aws.neon.tech/neondb/auth";
-
-export function getCookieSecret(): string {
-  const secret = process.env["NEON_AUTH_COOKIE_SECRET"];
-  if (!secret || secret.length < 32) {
-    throw new Error("NEON_AUTH_COOKIE_SECRET is missing or shorter than 32 characters.");
-  }
-  return secret;
-}
-
-function createServer() {
-  return createAuthServer({
-    baseUrl: NEON_AUTH_BASE_URL,
-    cookieSecret: getCookieSecret(),
-    sameSite: "lax",
-    context: async () => {
-      const { getRequestHeader, setCookie, getRequestHeaders } = await import(
-        "@tanstack/react-start/server"
-      );
-      return {
-        getCookies: () => getRequestHeader("cookie") ?? "",
-        setCookie: (name: string, value: string, options: Record<string, unknown>) => {
-          setCookie(name, value, options as never);
-        },
-        getHeader: (name: string) => getRequestHeader(name) ?? null,
-        // Eén canonieke origin: een preview- of deploy-host mag nooit in een
-        // OAuth-redirect belanden (dat geeft `redirect_uri_mismatch`).
-        getOrigin: () => {
-          const headers = getRequestHeaders();
-          const configured = process.env["NEXT_PUBLIC_APP_URL"];
-          if (configured) return configured.replace(/\/$/, "");
-          const host = headers["host"];
-          if (host && isApprovedHost(host)) return `https://${host}`;
-          return canonicalAppUrl();
-        },
-        getFramework: () => "tanstack-start",
-      };
-    },
-  });
-}
-
-export type NeonAuthIdentity = {
+export type RoutIdentity = {
   id: string;
   email: string;
   name: string | null;
@@ -68,16 +19,18 @@ export type NeonAuthIdentity = {
   emailVerified: boolean;
 };
 
-/** Reads the Neon Auth session for the in-flight request; null when signed out. */
-export async function getNeonAuthIdentity(): Promise<NeonAuthIdentity | null> {
+/** Reads the Better Auth session for the in-flight request; null when signed out. */
+export async function getAuthIdentity(): Promise<RoutIdentity | null> {
   try {
-    const auth = createServer();
-    const result = (await auth.getSession()) as unknown;
-    const payload = (result as { data?: unknown })?.data ?? result;
-    const user = (payload as { user?: Record<string, unknown> } | null)?.user;
-    const email = typeof user?.["email"] === "string" ? (user["email"] as string) : null;
+    const { getRequest } = await import("@tanstack/react-start/server");
+    const request = getRequest();
+    if (!request) return null;
+    const { createRoutAuth } = await import("@/lib/better-auth.server");
+    const result = await createRoutAuth(request).api.getSession({ headers: request.headers });
+    const user = result?.user as Record<string, unknown> | undefined;
     const id = typeof user?.["id"] === "string" ? (user["id"] as string) : null;
-    if (!email || !id) return null;
+    const email = typeof user?.["email"] === "string" ? (user["email"] as string) : null;
+    if (!id || !email) return null;
     return {
       id,
       email,
@@ -93,12 +46,12 @@ export async function getNeonAuthIdentity(): Promise<NeonAuthIdentity | null> {
 type Row = Record<string, unknown>;
 
 /**
- * Bridges a Neon Auth identity onto `public.users`.
+ * Bridges a Better Auth identity onto `public.users`.
  *
  * Existing members keep their original row (matched on the normalised e-mail),
  * so no foreign key ever changes. First-time members get a row created here.
  */
-export async function bridgeIdentity(identity: NeonAuthIdentity): Promise<SessionUser | null> {
+export async function bridgeIdentity(identity: RoutIdentity): Promise<SessionUser | null> {
   const email = identity.email.trim().toLowerCase();
   const { toSessionUser } = await import("@/lib/auth/session.server");
 
@@ -157,9 +110,9 @@ export async function bridgeIdentity(identity: NeonAuthIdentity): Promise<Sessio
   return toSessionUser(row);
 }
 
-/** Full resolve: Neon Auth session → the matching `public.users` record. */
+/** Full resolve: Better Auth session → the matching `public.users` record. */
 export async function getBridgedUser(): Promise<SessionUser | null> {
-  const identity = await getNeonAuthIdentity();
+  const identity = await getAuthIdentity();
   if (!identity) return null;
   return bridgeIdentity(identity);
 }
