@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { PasswordField } from "@/components/PasswordField";
 import { useAuth } from "@/hooks/useAuth";
 import { useI18n } from "@/lib/i18n";
-import { neonAuth } from "@/lib/neon";
+import { authClient } from "@/lib/auth-client";
 import { authCallbackUrl } from "@/lib/app-url";
 import { BRAND_ICONS } from "@/utils/brandIcons";
 
@@ -40,7 +40,7 @@ function GoogleColorMark({ className }: { className?: string }) {
 
 /**
  * Provider-tegels. Elke tegel start een Neon Auth OAuth-flow
- * (`neonAuth.signIn.social`) met het officiële merklogo in de merkkleur.
+ * (`authClient.signIn.social`) met het officiële merklogo in de merkkleur.
  */
 const TILES: { id: string; label: string; provider: string; mark: string; color: string }[] = [
   {
@@ -114,8 +114,8 @@ function errorMessage(error: unknown, fallback: string) {
 
 /**
  * De eigen ROUT-inlogkaart ("Verder naar ROUT"), met Neon Auth eronder:
- * OAuth via `neonAuth.signIn.social`, e-mail via `neonAuth.signIn.magicLink`
- * en wachtwoord via `neonAuth.signIn.email` / `neonAuth.signUp.email`.
+ * OAuth via `authClient.signIn.social`, e-mail via `authClient.signIn.magicLink`
+ * en wachtwoord via `authClient.signIn.email` / `authClient.signUp.email`.
  */
 export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode }) {
   const { t } = useI18n();
@@ -187,7 +187,7 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
         toast.error(body?.message || "Deze aanmeldwijze is nog niet ingesteld.");
         return;
       }
-      const result = await neonAuth.signIn.social({ provider, callbackURL });
+      const result = await authClient.signIn.social({ provider: provider as never, callbackURL });
       const error = (result as { error?: { message?: string } } | undefined)?.error;
       if (error) toast.error(error.message || t("auth.toast.failed"));
     } catch (err) {
@@ -204,7 +204,7 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
     setLoading(true);
     const address = email.trim().toLowerCase();
     try {
-      const result = await neonAuth.signIn.magicLink({ email: address, callbackURL });
+      const result = await authClient.signIn.magicLink({ email: address, callbackURL });
       const error = (result as { error?: { message?: string } } | undefined)?.error;
       if (error) {
         toast.error(error.message || t("auth.toast.signinFailed"));
@@ -223,7 +223,7 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
     if (!emailAccepted()) return;
     setLoading(true);
     try {
-      const result = await neonAuth.signIn.email({
+      const result = await authClient.signIn.email({
         email: email.trim().toLowerCase(),
         password,
         callbackURL,
@@ -252,7 +252,7 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
     setLoading(true);
     const address = email.trim().toLowerCase();
     try {
-      const result = await neonAuth.signUp.email({
+      const result = await authClient.signUp.email({
         email: address,
         password,
         name: address.split("@")[0] ?? address,
