@@ -13,6 +13,7 @@ import { useI18n } from "@/lib/i18n";
 import { authClient } from "@/lib/auth-client";
 import { authCallbackUrl } from "@/lib/app-url";
 import { BRAND_ICONS } from "@/utils/brandIcons";
+import { getEnabledProviders } from "@/lib/auth-providers.functions";
 
 /** Official multi-colour Google "G" — required by Google Identity branding. */
 function GoogleColorMark({ className }: { className?: string }) {
@@ -133,6 +134,18 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
   const [mastodonOpen, setMastodonOpen] = useState(false);
   const [mastodonInstance, setMastodonInstance] = useState("");
   const redirected = useRef(false);
+  const [enabled, setEnabled] = useState<string[] | null>(null);
+
+  useEffect(() => {
+    getEnabledProviders()
+      .then((list) => setEnabled(list))
+      .catch(() => setEnabled([]));
+  }, []);
+
+  const KEYED = new Set(["google", "github", "gitlab", "apple", "oidc", "infomaniak"]);
+  const visibleTiles = TILES.filter(
+    (tile) => !KEYED.has(tile.provider) || (enabled ?? []).includes(tile.provider),
+  );
 
   useEffect(() => {
     if (!user || redirected.current) return;
@@ -319,7 +332,7 @@ export default function AuthNeon({ initialMode = "magic" }: { initialMode?: Mode
             data-testid="auth-provider-tiles"
             className="mt-1 grid grid-cols-4 gap-2 sm:grid-cols-7"
           >
-            {TILES.map((tile) => (
+            {visibleTiles.map((tile) => (
               <button
                 key={tile.id}
                 type="button"
