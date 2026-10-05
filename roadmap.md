@@ -23,3 +23,11 @@
 - [ ] Bestaande auth/build-problemen controleren zonder regressies.
 - [ ] ROUT Developer Console en OAuth/OIDC-provider veilig ontwerpen en bouwen.
 - [ ] Sovereign Wallet, credential-uitgifte en publiek tonen veilig ontwerpen en bouwen.
+
+## Login & ontwikkelaars (okt 2026)
+- [x] Preview-/lokale adressen vertrouwd, knoppen zonder sleutels verborgen, Neon Auth-pakket weg.
+- [x] Browsertest: registreren, sessie, uitloggen, fout wachtwoord, Infomaniak-doorsturing.
+- [ ] "Login met ROUT" volledige ronde testen met een geverifieerd testaccount.
+- [ ] WhatsApp/Green-API schrappen; Telegram + sms als verificatie.
+- [ ] Bestaande Telegram-fout oplossen; verificatiecontrole elke 2,5 s.
+- [ ] Pagina 'Account beveiligen' afmaken + Telegram-webhook koppelen (Telegram-bot nodig).
