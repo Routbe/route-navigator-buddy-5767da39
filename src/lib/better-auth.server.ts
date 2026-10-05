@@ -141,6 +141,11 @@ export function createRoutAuth(request?: Request) {
     trustedOrigins: [
       canonicalAppUrl(),
       ...APP_DOMAINS.flatMap((d) => [`https://${d}`, `https://*.${d}`]),
+      "http://localhost:8080",
+      "http://localhost:*",
+      "http://127.0.0.1:*",
+      "https://*.lovableproject.com",
+      "https://*.lovable.app",
       ...(origin ? [origin] : []),
     ],
     advanced: {
