@@ -23,6 +23,26 @@
    - Daarna controleer ik het serverlog: geen `Invalid origin` en geen 500 meer.
    - Faalt een stap, dan zoek ik de oorzaak, los ik die op en test ik opnieuw tot alles slaagt.
 
+5. **"Login met ROUT" volledig testen**
+   - Met een testaccount in de Developer Hub een app aanmaken en een terugkeeradres instellen.
+   - De hele ronde doorlopen: toestemmingsscherm, code, token en gebruikersgegevens (ook gekoppelde accounts).
+   - Gevonden fouten oplossen tot de ronde slaagt.
+   - De aanmelding van ROUT zelf blijft hierbij onaangetast.
+
+## Fase 2 (pas nadat fase 1 werkt)
+
+6. **WhatsApp via Green-API volledig schrappen**
+   - Alle code, knoppen en instellingen verwijderen. Verificatie gaat via Telegram en sms.
+7. **De bestaande Telegram-fout oplossen**
+   - Eerst de oorzaak vaststellen aan de hand van de code en de logs, dan herstellen.
+8. **Controle op verificatie elke 2,5 seconden** in plaats van elke seconde.
+9. **Pagina 'Account beveiligen' afmaken**
+   - Telegram koppelen, sms-code instellen en duidelijke statusmeldingen tonen.
+10. **Telegram-webhook koppelen**
+   - Een openbaar ontvangstadres maken dat de afzender controleert met een geheime sleutel.
+   - Dat adres bij de Telegram-bot registreren en testen met een echt bericht.
+   - Daarvoor is de Telegram-bot nodig. Als die nog niet gekoppeld is, vraag ik je die te koppelen.
+
 ## Wat niet verandert
 - Database, bestaande accounts, Bluesky/Mastodon-login, "Login met ROUT" en de Developer Hub.
 - Er komen geen nieuwe aanmeldwijzen bij.
